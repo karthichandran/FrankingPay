@@ -89,7 +89,7 @@ namespace FrankingPay.BL.Service
                 FirstName = source.FirstName,
                 MiddleName = source.MiddleName,
                 LastName = source.LastName,
-                InvoiceDocNo = Convert.ToInt32(source.InvoiceDocNo),
+                InvoiceDocNo = Convert.ToInt64(source.InvoiceDocNo),
                 SaleValue =Convert.ToDecimal( source.SaleValue),
                 ArticleNo5payment = Convert.ToDecimal(source.Article5Amount),                
                 ArticleNo5ChallanNo = source.Article5ChallanNo,

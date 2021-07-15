@@ -52,7 +52,7 @@ namespace FrankingPay.BL.ViewModel
                 LastName = model.LastName,
                 Amount =Convert.ToInt32( model.ArticleNo5payment).ToString()
             };
-            var challanNo= ArticlePaymentProcess.ProcessArticle(articlefeedModel,true);
+              var challanNo= ArticlePaymentProcess.ProcessArticle(articlefeedModel,true);
             frankingService.UpdateArticle5eChallanNo(model.FrankingId, challanNo);
             GetFrankingProcessList();
         }

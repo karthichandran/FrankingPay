@@ -16,7 +16,7 @@ namespace FrankingPay.BL.Model
         private string _projectName;
         private int _unitNo;
         private int _lotNo;
-        private int _invoiceDocNo;
+        private long _invoiceDocNo;
         private string _firstName;
         private string _middleName;
         private string _lastName;
@@ -32,7 +32,7 @@ namespace FrankingPay.BL.Model
         public string ProjectName { get { return _projectName; } set { _projectName = value; OnPropertyChanged("ProjectName"); } }
         public int UnitNo { get { return _unitNo; } set { _unitNo = value; OnPropertyChanged("UnitNo"); } }
         public int LotNo { get { return _lotNo; } set { _lotNo = value; OnPropertyChanged("LotNo"); } }
-        public int InvoiceDocNo { get { return _invoiceDocNo; } set { _invoiceDocNo = value; OnPropertyChanged("InvoiceDocNo"); } }
+        public long InvoiceDocNo { get { return _invoiceDocNo; } set { _invoiceDocNo = value; OnPropertyChanged("InvoiceDocNo"); } }
         public string FirstName { get { return _firstName; } set { _firstName = value; OnPropertyChanged("FirstName"); } }
         public string MiddleName { get { return _middleName; } set { _middleName = value; OnPropertyChanged("MiddleName"); } }
         public string LastName { get { return _lastName; } set { _lastName = value; OnPropertyChanged("LastName"); } }

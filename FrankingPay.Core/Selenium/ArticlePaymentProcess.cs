@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Windows;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 
 namespace FrankingPay.Core.Selenium
@@ -195,8 +196,38 @@ namespace FrankingPay.Core.Selenium
                     WaitForReady(webDriver);
                 }
 
-                var downloadBtn = webDriver.FindElement(By.Id("SINGLEPDF"));
-                downloadBtn.Click();
+                var returnToPortalBtn = webDriver.FindElement(By.XPath("//input[@onClick='reDirectToPortalURL();']"));
+                returnToPortalBtn.Click();
+                WaitFor(webDriver, 2);
+
+                var prinBtn = webDriver.FindElement(By.Id("printChallan"));
+                prinBtn.Click();
+
+                //var jsExecuter = (IJavaScriptExecutor)webDriver;
+                //jsExecuter.ExecuteAsyncScript("document.getElementById('printChallan').click();");
+
+                WaitFor(webDriver, 2);
+                foreach (string handle in webDriver.WindowHandles)
+                {
+                    IWebDriver popup = webDriver.SwitchTo().Window(handle);
+                    var tit = popup.Title;
+                    if (popup.Title.Contains("popup title"))
+                    {
+                        break;
+                    }
+                }
+
+               
+                var currentHandle = webDriver.CurrentWindowHandle;
+               var handles=  webDriver.WindowHandles;
+                var printHandle = handles[handles.Count - 1];
+
+                webDriver.SwitchTo().Window(printHandle);
+                var printBtn = webDriver.FindElement(By.XPath("//cr-button[@class='action-button']"));
+                printBtn.Click();
+
+                //var downloadBtn = webDriver.FindElement(By.Id("SINGLEPDF"));
+                //downloadBtn.Click();
             }
             catch (Exception ex) {
                 throw new Exception("bank process Failed.");

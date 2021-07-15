@@ -28,7 +28,7 @@
             <ProgressBar x:Name="progressbar" Height="35" Width="200"  Margin=" 0 20 0 20" Visibility="Hidden" IsIndeterminate = "True"/>
         </StackPanel>
         <StackPanel Grid.Row="1" MinHeight="300">
-            <DataGrid  x:Name="importGrid"  ItemsSource="{Binding FrankingList,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" RowHeight="35" 
+            <DataGrid  x:Name="importGrid"  ItemsSource="{Binding FrankingList,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" RowHeight="35" VerticalScrollBarVisibility="Auto" MaxHeight="600"
                        RowBackground="#ccffff" AlternatingRowBackground="#fff" CanUserAddRows="False"  Foreground="#898b8c" HorizontalAlignment="Center" Margin="20,30,20,40" Width="auto" 
                        VerticalAlignment="Top"  AutoGenerateColumns="False" Grid.ColumnSpan="4" BorderBrush="#FFDFE1E2" >
                 <DataGrid.Columns>

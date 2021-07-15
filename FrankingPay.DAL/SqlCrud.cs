@@ -15,7 +15,9 @@ namespace FrankingPay.DAL
         public SqlCrud(string connectionString)
         {
             //_connectionString = connectionString;
+
             _connectionString = @"Data Source=DESKTOP-TV5J5QA\SQLEXPRESS;Initial Catalog=FrankingPay; User ID=karthi; Password =matrix291; Pooling = False";
+       //  _connectionString = @"Data Source=DESKTOP-FDSUNML\SQLEXPRESS;Initial Catalog=FrankingPay;Integrated Security=True";
         }
 
         public FrankingPayments GetPendingFrankingPayments(int id = 1)
@@ -73,8 +75,9 @@ namespace FrankingPay.DAL
         {
             try
             {
-                string query = @"  update FrankingStore set Article5ChallanNo =@challanNo where fraankingPayId=@frankingId ";
-                db.SaveData(query, new { frankingId, challanNo }, _connectionString);
+                var paidDate = DateTime.Now;
+                string query = @"  update FrankingStore set Article5ChallanNo =@challanNo ,Article5PaidDate=@paidDate where fraankingPayId=@frankingId ";
+                db.SaveData(query, new { frankingId, challanNo ,paidDate}, _connectionString);
                 return true;
             }
             catch (Exception ex)
@@ -87,8 +90,9 @@ namespace FrankingPay.DAL
         {
             try
             {
-                string query = @"  update FrankingStore set Article22ChallanNo =@challanNo where fraankingPayId=@frankingId ";
-                db.SaveData(query, new { frankingId, challanNo }, _connectionString);
+                var paidDate = DateTime.Now;
+                string query = @"  update FrankingStore set Article22ChallanNo =@challanNo ,Article22PaidDate=@paidDate where fraankingPayId=@frankingId ";
+                db.SaveData(query, new { frankingId, challanNo, paidDate }, _connectionString);
                 return true;
             }
             catch (Exception ex)

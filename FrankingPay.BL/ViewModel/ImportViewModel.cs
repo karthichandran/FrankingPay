@@ -95,6 +95,7 @@ namespace FrankingPay.BL.ViewModel
                         middleName = allotte.Replace(name[0], "").Replace(name[name.Length - 1], "");
                         lastName = name[name.Length - 1];
                     }
+                  
                     models.Add(new FrankingStoreModel
                     {
                         CompanyName = row[1].ToString(),
@@ -104,10 +105,10 @@ namespace FrankingPay.BL.ViewModel
                         LastName =lastName,
                         UnitNo = Convert.ToInt32(row[3].ToString()),
                         LotNo = Convert.ToInt32(row[4].ToString()),
-                        InvoiceDocNo = Convert.ToInt32(row[5].ToString()),
+                        InvoiceDocNo = Convert.ToInt64(row[5].ToString()),
                         SaleValue = Convert.ToDecimal(row[7].ToString()),
                         ArticleNo5Amount= Convert.ToDecimal(row[8].ToString()),
-                        ArticleNo22Amount = Convert.ToDecimal(row[8].ToString())
+                        ArticleNo22Amount = Convert.ToDecimal(row[9].ToString())
                     }) ;
 
                 }
