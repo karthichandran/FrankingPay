@@ -46,6 +46,12 @@ namespace FrankingPay.Core.Selenium
                 webDriver.Navigate().GoToUrl("https://k2.karnataka.gov.in/wps/portal/Khajane-II/Scope/Remittance/ChallanGeneration/");
                 WaitFor(webDriver, 3);
 
+                var curHandle = webDriver.CurrentWindowHandle;
+                var tot = webDriver.WindowHandles.Count;
+
+                var tota= webDriver.WindowHandles.Count;
+
+
                 var firstNameElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:firstName"));
                 firstNameElm.SendKeys(model.FirstName);
 

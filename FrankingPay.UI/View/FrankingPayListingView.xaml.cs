@@ -36,7 +36,7 @@ namespace FrankingPay.UI.View
             try
             {
                 progressbar.Visibility = Visibility.Visible;
-                ViewModel.GetFrankingProcessList();
+                ViewModel.GetFrankingProcessList(companyTxt.Text,projectTxt.Text,lotTxt.Text,unitTxt.Text,nameTxt.Text);
                 progressbar.Visibility = Visibility.Hidden;
             }
             catch (Exception ex) {
@@ -74,6 +74,75 @@ namespace FrankingPay.UI.View
                 progressbar.Visibility = Visibility.Hidden;
                 MessageBox.Show(ex.Message, "Error");
             }
+        }
+
+        private void DeleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                progressbar.Visibility = Visibility.Visible;
+                var model = (sender as Button).DataContext as PaymentProcessModel;
+                ViewModel.DeleteFranking(model.FrankingId);
+                progressbar.Visibility = Visibility.Hidden;
+            }
+            catch (Exception ex)
+            {
+                progressbar.Visibility = Visibility.Hidden;
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
+
+        private void ResetBtn_Click(object sender, RoutedEventArgs e)
+        {
+            companyTxt.Text = "";
+            projectTxt.Text = "";
+            lotTxt.Text = "";
+            unitTxt.Text = "";
+            nameTxt.Text = "";
+        }
+
+        private void SelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            var isChecked = (sender as CheckBox).IsChecked;
+            ViewModel.SelectAll(Convert.ToBoolean( isChecked));
+        }
+
+        private void ArticleProcess_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ProcessArticleForSelectedRecord();
+        }
+
+        private void AbstractRpt_Click(object sender, RoutedEventArgs e)
+        {
+            var lotNo = lotTxt.Text;
+            if (lotNo == "")
+            {
+                MessageBox.Show("Please a Search By Lot No then try");
+                return;
+            }
+
+            var ba=  ViewModel.AbstractReport();
+            var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+            System.IO.Directory.CreateDirectory(downloadPath+ @"\FrankingPayments");
+            downloadPath += @"\FrankingPayments\" +"LotAbstractReport"+"_"+ lotNo + ".xls";
+            var fs = File.Create(downloadPath);
+            var ms = new MemoryStream(ba);
+            ms.Seek(0, SeekOrigin.Begin);
+            ms.CopyTo(fs);
+            MessageBox.Show("File is downloaded successfully. Please Refer the path : " + downloadPath);
+        }
+
+        private void DetailRpt_Click(object sender, RoutedEventArgs e)
+        {
+            var ba = ViewModel.ExportToExcelReport();
+            var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+            System.IO.Directory.CreateDirectory(downloadPath + @"\FrankingPayments");
+            downloadPath += @"\FrankingPayments\" + "FrankingPay" + "_" + DateTime.Now + ".xls";
+            var fs = File.Create(downloadPath);
+            var ms = new MemoryStream(ba);
+            ms.Seek(0, SeekOrigin.Begin);
+            ms.CopyTo(fs);
+            MessageBox.Show("File is downloaded successfully. Please Refer the path : " + downloadPath);
         }
     }
 }

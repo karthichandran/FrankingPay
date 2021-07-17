@@ -79,12 +79,22 @@ namespace FrankingPay.Core.Selenium
         protected static IWebDriver GetChromeDriver()
         {
             try
-            {                
+            {
+               
                 ChromeOptions options = new ChromeOptions();
                 options.AddArgument("--no-sandbox");
                 options.AddArgument("--disable-infobars");
                 options.AddArgument("--disable-dev-shm-usage");
                 options.AddArgument("--start-maximized");
+
+               // options.AddArgument("--disable-print-preview");
+
+
+                //options.AddUserProfilePreference("pdfjs.disabled", true);
+                //options.AddUserProfilePreference("download.prompt_for_download", false);
+                //options.AddUserProfilePreference("download.directory_upgrade", true);
+                //options.AddUserProfilePreference("plugins.plugins_disabled", "Chrome PDF Viewer");
+                //options.AddUserProfilePreference("plugins.always_open_pdf_externally", true);
 
                 ChromeDriver driver = new ChromeDriver(options);
                 return driver;                

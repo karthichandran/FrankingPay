@@ -10,24 +10,72 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="150"/>
             <RowDefinition Height="*" />
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <Button x:Name="SearchBtn"  Width="150" Height="35" Margin=" 0 30 0 0" Padding="20 0 20 0"  Background="#29B6F6" BorderBrush="#29B6F6" Click="SearchBtn_Click">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10 0 10 0">
+                    <TextBlock Text="Company" Margin="0 20 0 10" FontSize="14" FontWeight="Medium" Foreground="#9E9E9E"/>
+                    <TextBox x:Name="companyTxt" MinWidth="150" Height="30" BorderBrush="#E0E0E0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10 0 10 0">
+                    <TextBlock Text="Project" Margin="0 20 0 10" FontSize="14" FontWeight="Medium" Foreground="#9E9E9E"/>
+                    <TextBox x:Name="projectTxt" MinWidth="150" Height="30" BorderBrush="#E0E0E0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10 0 10 0">
+                    <TextBlock Text="Lot No" Margin="0 20 0 10" FontSize="14" FontWeight="Medium" Foreground="#9E9E9E"/>
+                    <TextBox x:Name="lotTxt" MinWidth="150" Height="30" BorderBrush="#E0E0E0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10 0 10 0">
+                    <TextBlock Text="Unit No" Margin="0 20 0 10" FontSize="14" FontWeight="Medium" Foreground="#9E9E9E"/>
+                    <TextBox x:Name="unitTxt" MinWidth="150" Height="30" BorderBrush="#E0E0E0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10 0 10 0">
+                    <TextBlock Text="Name ( First | Middle | Last)" Margin="0 20 0 10" FontSize="14" FontWeight="Medium" Foreground="#9E9E9E"/>
+                    <TextBox x:Name="nameTxt" MinWidth="150" Height="30" BorderBrush="#E0E0E0"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="SearchBtn"  Width="150" Height="35" Margin=" 5 30 5 0" Padding="20 0 20 0"   Background="#29B6F6" BorderBrush="#29B6F6" Click="SearchBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <fn:FontAwesome Icon="Search"  Foreground="#fff" Margin="0 5 10 0" FontSize="20" />
                     <Label Content="Search" Foreground="#fff" FontSize="15" FontWeight="Black"/>
                 </StackPanel>
             </Button>
+                <Button x:Name="ResetBtn"  Width="150" Height="35" Margin=" 5 30 5 0" Padding="20 0 20 0"  Background="#FFD600" BorderBrush="#FFD600" Click="ResetBtn_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fn:FontAwesome Icon="Refresh"  Foreground="#fff" Margin="0 5 10 0" FontSize="20" />
+                        <Label Content="Reset" Foreground="#fff" FontSize="15" FontWeight="Black"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
             <ProgressBar x:Name="progressbar" Height="35" Width="200"  Margin=" 0 20 0 20" Visibility="Hidden" IsIndeterminate = "True"/>
         </StackPanel>
+        
+        
         <StackPanel Grid.Row="1" MinHeight="300">
             <DataGrid  x:Name="importGrid"  ItemsSource="{Binding FrankingProcessList,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  VerticalScrollBarVisibility="Auto" MaxHeight="600"
                        RowBackground="#ccffff" AlternatingRowBackground="#fff" CanUserAddRows="False"  Foreground="#898b8c" HorizontalAlignment="Center" Margin="20,30,20,40" Width="auto" 
                        VerticalAlignment="Top"  AutoGenerateColumns="False" Grid.ColumnSpan="4" BorderBrush="#FFDFE1E2">
                 <DataGrid.Columns>
+                    <DataGridTemplateColumn >
+                        <DataGridTemplateColumn.Header>
+                            <CheckBox x:Name="SelectAll" Content="All" Checked="SelectAll_Checked" Unchecked="SelectAll_Checked"/>
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate >
+                            <DataTemplate>
+                                <CheckBox x:Name="checkBx"  IsChecked="{Binding IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10 5 0 0 ">
+                                    <CheckBox.LayoutTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                    </CheckBox.LayoutTransform>
+
+                                </CheckBox>
+
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Company Name" Binding="{Binding CompanyName}">
                         <DataGridColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
@@ -266,16 +314,53 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTemplateColumn >
+                        <DataGridTemplateColumn.CellTemplate >
+                            <DataTemplate>
+                                <Button x:Name="DeleteBtn"  Click="DeleteBtn_Click"   FontWeight="Bold" Background="Transparent">                                    
+                                    <StackPanel Orientation="Horizontal">
+                                        <fn:FontAwesome Icon="Trash"  Foreground="#B71C1C"  FontSize="25" />
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
-        <StackPanel Grid.Row="2">
-            <!--<Button x:Name="savebtn" Click="savebtn_Click" Width="120" Height="35" Foreground="#fff" Background="#00C853" BorderBrush="#00C853" >
-                <StackPanel Orientation="Horizontal">
-                    <fn:FontAwesome Icon="Save"  Foreground="#fff" Margin="0 5 10 0" FontSize="20"  />
-                    <Label Content="Save" Foreground="#fff" FontSize="15" FontWeight="Black"/>
-                </StackPanel>
-            </Button>-->
+        
+        <StackPanel Grid.Row="2" Orientation="Vertical" >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text=" Total Records :" FontSize="15" Margin="20 0 0 0" FontWeight="Medium" Foreground="#4FC3F7"/>
+            <TextBlock Text="{Binding TotalRecords, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" FontSize="16" Margin="5 0 0 0" FontWeight="Medium" Foreground="#0277BD"/>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button x:Name="ArticleProcess"  Click="ArticleProcess_Click"   FontWeight="Bold" Background="#607D8B" Margin="5 0 5 0">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <fn:FontAwesome Icon="Check"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
+                            <Label Content="Article Proceed" Foreground="#fff" FontSize="15" FontWeight="Black"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="AbstractRpt"  Click="AbstractRpt_Click"   FontWeight="Bold" Background="#607D8B" Margin="5 0 5 0">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <fn:FontAwesome Icon="Print"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
+                            <Label Content="Abstract Rport" Foreground="#fff" FontSize="15" FontWeight="Black"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="DetailRpt"  Click="DetailRpt_Click"   FontWeight="Bold" Background="#607D8B" Margin="5 0 5 0">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <fn:FontAwesome Icon="Print"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
+                            <Label Content="Detail Report" Foreground="#fff" FontSize="15" FontWeight="Black"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
         </StackPanel>
     </Grid>
 </UserControl>

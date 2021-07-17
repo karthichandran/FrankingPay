@@ -40,6 +40,17 @@ namespace FrankingPay.BL.Service
             return frankingList;
         }
 
+        public List<PaymentProcessModel> GetFrankingList(string company,string project,string lotNo,string unitNo,string name)
+        {
+            List<PaymentProcessModel> frankingList = new List<PaymentProcessModel>();
+            var list = dataService.GetPendingFrankingPayments(company, project, lotNo, unitNo, name);
+            foreach (var item in list.PendingFrankingPaymentsList)
+            {
+                frankingList.Add(CreateModelFromFrankingDataModel(item));
+            }
+            return frankingList;
+        }
+
         public bool UpdateArticle5eChallanNo(int frankingId, string challanNo) {
             try {                 
                 dataService.UpdateChallan5E(frankingId, challanNo);
@@ -55,6 +66,19 @@ namespace FrankingPay.BL.Service
             try
             {
                 dataService.UpdateChallan22(frankingId, challanNo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool DeleteFrankingRecord(int frankingId)
+        {
+            try
+            {
+                dataService.DeletetRecord(frankingId);
                 return true;
             }
             catch (Exception ex)

@@ -40,6 +40,35 @@ namespace FrankingPay.DAL
             return payments;
         }
 
+        public FrankingPayments GetPendingFrankingPayments(string company,string project,string lotNo,string unitNo,string name)
+        {
+            try
+            {
+                FrankingPayments payments = new FrankingPayments();
+                string sql = @"SELECT FraankingPayId,CompanyName,ProjectName,UnitNo, 
+                                  LotNo,InvoiceDocNo,FirstName,MiddleName,LastName,
+                                  SaleValue,Article5Amount,Article5ChallanNo,Article5PaidDate,
+                                  Article22PayAmount,Article22ChallanNo,Article22PaidDate
+                             FROM dbo.FrankingStore
+                            WHERE  (@company='' or CompanyName like '%'+@company+'%')
+                             and (@project='' or ProjectName like '%'+@project+'%')
+and (@lotNo='' or LotNo like '%'+@lotNo+'%') and (@unitNo='' or UnitNo like '%'+@unitNo+'%') 
+and( (@name='' or FirstName like '%'+@name+'%') or (@name='' or MiddleName like '%'+@name+'%') or (@name='' or LastName like '%'+@name+'%'))";
+                payments.PendingFrankingPaymentsList = db.LoadData<FrankingStore, dynamic>(sql, new { company, project, lotNo, unitNo, name }, _connectionString);
+
+                string partnerSql = @"SELECT PartnerId, PartnerName, PartnerAddress, DdoCategory, DdoDistrict,
+                                         DdoDepartment, DdoOffice, Purpose, Article5Subpurpose, Article22Subpurpose
+                                    FROM PartnerInfo
+                                   WHERE PartnerId = '1'"; //hard coded for now. 
+                payments.PartnerInfo = db.LoadData<PartnerInfoModel, dynamic>(partnerSql, new {  }, _connectionString).FirstOrDefault();
+                return payments;
+            }
+            catch (Exception ex) {
+
+                throw ex;
+            }
+        }
+
         public bool SaveFrankingPayList(List<FrankingStore> items) {
 
             try
@@ -99,6 +128,21 @@ namespace FrankingPay.DAL
             {
                 throw ex;
             }           
+        }
+
+        public bool DeletetRecord(int frankingId)
+        {
+            try
+            {
+                var paidDate = DateTime.Now;
+                string query = @"  delete from FrankingStore where fraankingPayId=@frankingId ";
+                db.SaveData(query, new { frankingId }, _connectionString);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

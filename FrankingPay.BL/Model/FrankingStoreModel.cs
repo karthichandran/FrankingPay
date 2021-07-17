@@ -10,6 +10,7 @@ namespace FrankingPay.BL.Model
 {
    public class FrankingStoreModel : INotifyPropertyChanged
     {
+        private int _index;
         private int _frankingId;
         private string _companyName;
         private string _projectName;
@@ -25,6 +26,7 @@ namespace FrankingPay.BL.Model
         private DateTime _created;
         private DateTime _updated;
 
+        public int Index { get { return _index; } set { _index = value; OnPropertyChanged("Index"); } }
         public int FrankingId { get { return _frankingId; } set { _frankingId = value; OnPropertyChanged("FrankingId"); } }
         public string CompanyName { get { return _companyName; } set { _companyName = value; OnPropertyChanged("CompanyName"); } }
         public string ProjectName { get { return _projectName; } set { _projectName = value; OnPropertyChanged("ProjectName"); } }

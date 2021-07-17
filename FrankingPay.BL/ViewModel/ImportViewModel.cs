@@ -20,7 +20,8 @@ namespace FrankingPay.BL.ViewModel
         private ObservableCollection<FrankingStoreModel> _frankingModel;
         public ObservableCollection< FrankingStoreModel> FrankingList { get { return _frankingModel; } set { _frankingModel = value; RaisePropertyChange("FrankingList"); } }
         public IList<FrankingStoreModel> Franking { get; set; }
-        public string name { get; set; }
+        private int _totalRecords = 0;
+        public int TotalRecords { get { return _totalRecords; } set { _totalRecords = value; RaisePropertyChange("TotalRecords"); } }
 
         private FrankingService frankingService { get; set; }
         public ImportViewModel()
@@ -60,6 +61,7 @@ namespace FrankingPay.BL.ViewModel
                     Console.WriteLine("Records Count = " + dataTable.Rows.Count);
 
                     FrankingList =new ObservableCollection<FrankingStoreModel>( FormatData(dataTable));
+                    TotalRecords = FrankingList.Count;
                 }
                 return true;
             }
@@ -73,7 +75,7 @@ namespace FrankingPay.BL.ViewModel
             try
             {
                 List<FrankingStoreModel> models = new List<FrankingStoreModel>();
-
+                int inx = 0;
                 foreach (DataRow row in dt.Rows)
                 {
 
@@ -97,7 +99,7 @@ namespace FrankingPay.BL.ViewModel
                     }
                   
                     models.Add(new FrankingStoreModel
-                    {
+                    {Index=inx,
                         CompanyName = row[1].ToString(),
                         ProjectName = row[2].ToString(),
                         FirstName = firstName,
@@ -110,7 +112,7 @@ namespace FrankingPay.BL.ViewModel
                         ArticleNo5Amount= Convert.ToDecimal(row[8].ToString()),
                         ArticleNo22Amount = Convert.ToDecimal(row[9].ToString())
                     }) ;
-
+                    inx++;
                 }
 
                 return models;
@@ -143,6 +145,12 @@ namespace FrankingPay.BL.ViewModel
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
             }
+        }
+
+        public bool DeleteRecord(FrankingStoreModel model) {
+            FrankingList.Remove(model);
+            TotalRecords = FrankingList.Count;
+            return true;
         }
 
     }

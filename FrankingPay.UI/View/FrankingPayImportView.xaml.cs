@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FrankingPay.BL.Model;
 using FrankingPay.BL.ViewModel;
 using Microsoft.Win32;
 
@@ -67,6 +68,22 @@ namespace FrankingPay.UI.View
             var status=  ViewModel.SaveImportData();
             progressbar.Visibility = Visibility.Hidden;
             savebtn.Visibility = Visibility.Hidden;
+        }
+
+        private void DeleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                progressbar.Visibility = Visibility.Visible;
+                var model = (sender as Button).DataContext as FrankingStoreModel;
+                ViewModel.DeleteRecord(model);
+                progressbar.Visibility = Visibility.Hidden;
+            }
+            catch (Exception ex)
+            {
+                progressbar.Visibility = Visibility.Hidden;
+                MessageBox.Show(ex.Message, "Error");
+            }
         }
     }
 }
