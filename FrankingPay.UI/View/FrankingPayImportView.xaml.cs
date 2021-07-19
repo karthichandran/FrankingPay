@@ -56,7 +56,7 @@ namespace FrankingPay.UI.View
             }
             catch (Exception ex)
             {
-
+                 MessageBox.Show("Filed to import file");
             }           
 
         }
@@ -66,6 +66,7 @@ namespace FrankingPay.UI.View
             
             progressbar.Visibility = Visibility.Visible;
             var status=  ViewModel.SaveImportData();
+            MessageBox.Show("Saved imported records");
             progressbar.Visibility = Visibility.Hidden;
             savebtn.Visibility = Visibility.Hidden;
         }

@@ -55,7 +55,7 @@
         </StackPanel>
         
         
-        <StackPanel Grid.Row="1" MinHeight="300">
+        <StackPanel Grid.Row="1" MinHeight="250">
             <DataGrid  x:Name="importGrid"  ItemsSource="{Binding FrankingProcessList,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  VerticalScrollBarVisibility="Auto" MaxHeight="600"
                        RowBackground="#ccffff" AlternatingRowBackground="#fff" CanUserAddRows="False"  Foreground="#898b8c" HorizontalAlignment="Center" Margin="20,30,20,40" Width="auto" 
                        VerticalAlignment="Top"  AutoGenerateColumns="False" Grid.ColumnSpan="4" BorderBrush="#FFDFE1E2">

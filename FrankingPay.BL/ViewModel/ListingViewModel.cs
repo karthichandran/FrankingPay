@@ -57,8 +57,11 @@ namespace FrankingPay.BL.ViewModel
                 LastName = model.LastName,
                 Amount =Convert.ToInt32( model.ArticleNo5payment).ToString()
             };
-            System.IO.Directory.CreateDirectory(downloadPath + @"\" + model.LotNo);
-            downloadPath = downloadPath + @"\" + model.LotNo;
+
+            var downloadFolder = downloadPath + @"\" + model.LotNo;
+            if (!Directory.Exists(downloadFolder))
+                Directory.CreateDirectory(downloadFolder);
+           
             var fileName = model.ProjectName + "_" + model.UnitNo + "_5E";
             var challanNo= ArticlePaymentProcess.ProcessArticle(articlefeedModel,true, downloadPath, fileName);
             frankingService.UpdateArticle5eChallanNo(model.FrankingId, challanNo);
@@ -74,10 +77,12 @@ namespace FrankingPay.BL.ViewModel
                 LastName = model.LastName,
                 Amount = Convert.ToInt32(model.ArticleNo22payment).ToString()
             };
-            System.IO.Directory.CreateDirectory(downloadPath + @"\" + model.LotNo);
-            downloadPath = downloadPath + @"\" + model.LotNo;
+            var downloadFolder = downloadPath + @"\" + model.LotNo;
+            if (!Directory.Exists(downloadFolder))
+                Directory.CreateDirectory(downloadFolder);
+           
             var fileName = model.ProjectName + "_" + model.UnitNo + "_22";
-            var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadPath, fileName);
+            var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName);
             frankingService.UpdateArticle22ChallanNo(model.FrankingId, challanNo);
             GetFrankingProcessList();
         }
@@ -112,10 +117,12 @@ namespace FrankingPay.BL.ViewModel
                         Amount = Convert.ToInt32(item.ArticleNo5payment).ToString()
                     };
                     //Articel 5E
-                    System.IO.Directory.CreateDirectory(downloadPath + @"\" + item.LotNo);
-                    downloadPath += @"\" + item.LotNo;
+                    var downloadFolder = downloadPath + @"\" + item.LotNo;
+                    if (!Directory.Exists(downloadFolder))
+                        Directory.CreateDirectory(downloadFolder);
+
                     var fileName = item.ProjectName + "_" + item.UnitNo + "_5E";
-                    var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, true, downloadPath, fileName);
+                    var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, true, downloadFolder, fileName);
                     frankingService.UpdateArticle5eChallanNo(item.FrankingId, challanNo);
 
                     //Articel 22
@@ -126,11 +133,10 @@ namespace FrankingPay.BL.ViewModel
                         LastName = item.LastName,
                         Amount = Convert.ToInt32(item.ArticleNo22payment).ToString()
                     };
-                    System.IO.Directory.CreateDirectory(downloadPath + @"\" + item.LotNo);
-                    downloadPath += @"\" + item.LotNo;
+                   
                     fileName = item.ProjectName + "_" + item.UnitNo + "_22";
-                    challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadPath,fileName);
-                    frankingService.UpdateArticle5eChallanNo(item.FrankingId, challanNo);
+                    challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName);
+                    frankingService.UpdateArticle22ChallanNo(item.FrankingId, challanNo);
                 }
                 catch (Exception ex) { 
                 }

@@ -115,39 +115,58 @@ namespace FrankingPay.UI.View
         {
             var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
             ViewModel.ProcessArticleForSelectedRecord(downloadPath);
+
+            MessageBox.Show("Batch process is completed");
         }
 
         private void AbstractRpt_Click(object sender, RoutedEventArgs e)
         {
-            var lotNo = lotTxt.Text;
-            if (lotNo == "")
+            try
             {
-                MessageBox.Show("Please a Search By Lot No then try");
-                return;
-            }
+                var lotNo = lotTxt.Text;
+                if (lotNo == "")
+                {
+                    MessageBox.Show("Please a Search By Lot No then try");
+                    return;
+                }
 
-            var ba=  ViewModel.AbstractReport();
-            var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
-            System.IO.Directory.CreateDirectory(downloadPath+ @"\FrankingPayments");
-            downloadPath += @"\FrankingPayments\" +"LotAbstractReport"+"_"+ lotNo + ".xls";
-            var fs = File.Create(downloadPath);
-            var ms = new MemoryStream(ba);
-            ms.Seek(0, SeekOrigin.Begin);
-            ms.CopyTo(fs);
-            MessageBox.Show("File is downloaded successfully. Please Refer the path : " + downloadPath);
+                var ba = ViewModel.AbstractReport();
+                var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+
+                if (!Directory.Exists(downloadPath + @"\FrankingPayments"))
+                    Directory.CreateDirectory(downloadPath + @"\FrankingPayments");
+
+                downloadPath += @"\FrankingPayments\" + "LotAbstractReport" + "_" + lotNo + ".xls";
+                var fs = File.Create(downloadPath);
+                var ms = new MemoryStream(ba);
+                ms.Seek(0, SeekOrigin.Begin);
+                ms.CopyTo(fs);
+                MessageBox.Show("File is downloaded successfully. Please Refer the path : " + downloadPath);
+            }
+            catch (Exception ex) {
+                MessageBox.Show("Failed to prepare Abstract report");
+            }
         }
 
         private void DetailRpt_Click(object sender, RoutedEventArgs e)
         {
-            var ba = ViewModel.ExportToExcelReport();
-            var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
-            System.IO.Directory.CreateDirectory(downloadPath + @"\FrankingPayments");
-            downloadPath += @"\FrankingPayments\" + "FrankingPay" + "_" + DateTime.Now + ".xls";
-            var fs = File.Create(downloadPath);
-            var ms = new MemoryStream(ba);
-            ms.Seek(0, SeekOrigin.Begin);
-            ms.CopyTo(fs);
-            MessageBox.Show("File is downloaded successfully. Please Refer the path : " + downloadPath);
+            try
+            {
+                var ba = ViewModel.ExportToExcelReport();
+                var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+
+                if (!Directory.Exists(downloadPath + @"\FrankingPayments"))
+                    Directory.CreateDirectory(downloadPath + @"\FrankingPayments");
+                downloadPath += @"\FrankingPayments\" + "FrankingPay" + "_" + DateTime.Now + ".xls";
+                var fs = File.Create(downloadPath);
+                var ms = new MemoryStream(ba);
+                ms.Seek(0, SeekOrigin.Begin);
+                ms.CopyTo(fs);
+                MessageBox.Show("File is downloaded successfully. Please Refer the path : " + downloadPath);
+            }
+            catch (Exception ex) {
+                MessageBox.Show("Failed to prepare details report");
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace FrankingPay.DAL
             //_connectionString = connectionString;
 
             _connectionString = @"Data Source=DESKTOP-TV5J5QA\SQLEXPRESS;Initial Catalog=FrankingPay; User ID=karthi; Password =matrix291; Pooling = False";
-       //  _connectionString = @"Data Source=DESKTOP-FDSUNML\SQLEXPRESS;Initial Catalog=FrankingPay;Integrated Security=True";
+        //_connectionString = @"Data Source=DESKTOP-FDSUNML\SQLEXPRESS;Initial Catalog=FrankingPay;Integrated Security=True";
         }
 
         public FrankingPayments GetPendingFrankingPayments(int id = 1)

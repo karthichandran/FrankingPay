@@ -122,17 +122,19 @@ namespace FrankingPay.Core.Selenium
             //    UserName = "579091011.VIJAYALA",
             //    UserPassword = "Sriram@123"
             //};
-            
+            var webDriver = GetChromeDriver();
             try
             {
-                var webDriver = GetChromeDriver();
+               
                 FeedStaticDate(model, isArticle5E);
                 var challan = FillArticle5E(webDriver, model);
                 ProcessToBank(webDriver);
                 GeneratePDF(webDriver, downloadPath, fileName);
+                webDriver.Close();
                 return challan;
             }
             catch (Exception ex) {
+                webDriver.Close();
                 throw ex;
             }
         }
@@ -307,10 +309,10 @@ namespace FrankingPay.Core.Selenium
                // var prinBtn = webDriver.FindElement(By.Id("printChallan"));
                 //  prinBtn.Click();
 
-                var jsExecuter = (IJavaScriptExecutor)webDriver;
-                jsExecuter.ExecuteScript(" var elm=document.getElementById('printChallan'); setTimeout(function(){elm.click();},100);");
+                //var jsExecuter = (IJavaScriptExecutor)webDriver;
+                //jsExecuter.ExecuteScript(" var elm=document.getElementById('printChallan'); setTimeout(function(){elm.click();},100);");
 
-                WaitFor(webDriver, 1);
+                //WaitFor(webDriver, 1);
                // webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
                
 

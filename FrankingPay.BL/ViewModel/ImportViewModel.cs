@@ -79,7 +79,7 @@ namespace FrankingPay.BL.ViewModel
                 foreach (DataRow row in dt.Rows)
                 {
 
-                    var allotte = row[6].ToString();
+                    var allotte = row[6].ToString().Trim();
                     var name = allotte.Split(' ');
                     string firstName="", middleName="", lastName="";
                     if (name.Length == 1)
@@ -118,7 +118,7 @@ namespace FrankingPay.BL.ViewModel
                 return models;
             }
             catch (Exception ex) {
-                return null;
+                throw ex;
             }
         }
 
