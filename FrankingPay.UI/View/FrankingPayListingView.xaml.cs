@@ -49,9 +49,12 @@ namespace FrankingPay.UI.View
             try
             {
                 progressbar.Visibility = Visibility.Visible;
+                var model = (sender as Button).DataContext as PaymentProcessModel;
 
-                   var model = (sender as Button).DataContext as PaymentProcessModel;
-                 ViewModel.ProcessArticle5E(model);
+                var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+              
+              
+                 ViewModel.ProcessArticle5E(model, downloadPath);
                 progressbar.Visibility = Visibility.Hidden;
             }
             catch (Exception ex) {
@@ -66,7 +69,8 @@ namespace FrankingPay.UI.View
             {
                 progressbar.Visibility = Visibility.Visible;
                 var model = (sender as Button).DataContext as PaymentProcessModel;
-            ViewModel.ProcessArticle22(model);
+                var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+                ViewModel.ProcessArticle22(model, downloadPath);
                 progressbar.Visibility = Visibility.Hidden;
             }
             catch (Exception ex)
@@ -109,7 +113,8 @@ namespace FrankingPay.UI.View
 
         private void ArticleProcess_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ProcessArticleForSelectedRecord();
+            var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+            ViewModel.ProcessArticleForSelectedRecord(downloadPath);
         }
 
         private void AbstractRpt_Click(object sender, RoutedEventArgs e)

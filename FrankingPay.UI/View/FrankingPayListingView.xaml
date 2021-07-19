@@ -339,7 +339,7 @@
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal">
                             <fn:FontAwesome Icon="Check"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
-                            <Label Content="Article Proceed" Foreground="#fff" FontSize="15" FontWeight="Black"/>
+                            <Label Content="Run" Foreground="#fff" FontSize="15" FontWeight="Black"/>
                         </StackPanel>
                     </StackPanel>
                 </Button>

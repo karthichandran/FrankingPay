@@ -49,7 +49,7 @@ namespace FrankingPay.BL.ViewModel
             }
         }
 
-        public void ProcessArticle5E(PaymentProcessModel model) {
+        public void ProcessArticle5E(PaymentProcessModel model,string downloadPath) {
             var articlefeedModel = new ArticleFeedModel
             {
                 FirstName = model.FirstName,
@@ -57,21 +57,27 @@ namespace FrankingPay.BL.ViewModel
                 LastName = model.LastName,
                 Amount =Convert.ToInt32( model.ArticleNo5payment).ToString()
             };
-              var challanNo= ArticlePaymentProcess.ProcessArticle(articlefeedModel,true);
+            System.IO.Directory.CreateDirectory(downloadPath + @"\" + model.LotNo);
+            downloadPath = downloadPath + @"\" + model.LotNo;
+            var fileName = model.ProjectName + "_" + model.UnitNo + "_5E";
+            var challanNo= ArticlePaymentProcess.ProcessArticle(articlefeedModel,true, downloadPath, fileName);
             frankingService.UpdateArticle5eChallanNo(model.FrankingId, challanNo);
             GetFrankingProcessList();
         }
 
-        public void ProcessArticle22(PaymentProcessModel model)
+        public void ProcessArticle22(PaymentProcessModel model, string downloadPath)
         {
             var articlefeedModel = new ArticleFeedModel
             {
                 FirstName = model.FirstName,
                 MiddleName = model.MiddleName,
                 LastName = model.LastName,
-                Amount = Convert.ToInt32(model.ArticleNo5payment).ToString()
+                Amount = Convert.ToInt32(model.ArticleNo22payment).ToString()
             };
-            var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false);
+            System.IO.Directory.CreateDirectory(downloadPath + @"\" + model.LotNo);
+            downloadPath = downloadPath + @"\" + model.LotNo;
+            var fileName = model.ProjectName + "_" + model.UnitNo + "_22";
+            var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadPath, fileName);
             frankingService.UpdateArticle22ChallanNo(model.FrankingId, challanNo);
             GetFrankingProcessList();
         }
@@ -87,7 +93,7 @@ namespace FrankingPay.BL.ViewModel
             }
         }
 
-        public bool ProcessArticleForSelectedRecord() {
+        public bool ProcessArticleForSelectedRecord( string downloadPath) {
 
             var items = FrankingProcessList.Where(x => x.IsSelected == true);
 
@@ -106,10 +112,24 @@ namespace FrankingPay.BL.ViewModel
                         Amount = Convert.ToInt32(item.ArticleNo5payment).ToString()
                     };
                     //Articel 5E
-                    var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, true);
+                    System.IO.Directory.CreateDirectory(downloadPath + @"\" + item.LotNo);
+                    downloadPath += @"\" + item.LotNo;
+                    var fileName = item.ProjectName + "_" + item.UnitNo + "_5E";
+                    var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, true, downloadPath, fileName);
                     frankingService.UpdateArticle5eChallanNo(item.FrankingId, challanNo);
+
                     //Articel 22
-                    challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false);
+                    articlefeedModel = new ArticleFeedModel
+                    {
+                        FirstName = item.FirstName,
+                        MiddleName = item.MiddleName,
+                        LastName = item.LastName,
+                        Amount = Convert.ToInt32(item.ArticleNo22payment).ToString()
+                    };
+                    System.IO.Directory.CreateDirectory(downloadPath + @"\" + item.LotNo);
+                    downloadPath += @"\" + item.LotNo;
+                    fileName = item.ProjectName + "_" + item.UnitNo + "_22";
+                    challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadPath,fileName);
                     frankingService.UpdateArticle5eChallanNo(item.FrankingId, challanNo);
                 }
                 catch (Exception ex) { 

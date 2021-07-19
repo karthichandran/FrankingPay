@@ -7,13 +7,110 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using Winnovative;
+using System.Xml;
+using HtmlAgilityPack;
+using System.Text.RegularExpressions;
 
 namespace FrankingPay.Core.Selenium
 {
    public class ArticlePaymentProcess:Base
     {
         static BankAccountDetailsDto _bankLogin;
-        public static string ProcessArticle(ArticleFeedModel model,bool isArticle5E) {
+        private static void GeneratePDF(IWebDriver webdriver, string downloadPath, string fileName)
+        {
+            // Create a HTML to PDF converter object with default settings
+            HtmlToPdfConverter htmlToPdfConverter = new HtmlToPdfConverter();
+
+            // Set license key received after purchase to use the converter in licensed mode
+            // Leave it not set to use the converter in demo mode
+            htmlToPdfConverter.LicenseKey = "qiQ3JTc2JWdqZHdhMWRpaStnbH8lPDwlNjQrNDcrPDw8PA==";
+
+            // Set an adddional delay in seconds to wait for JavaScript or AJAX calls after page load completed
+            // Set this property to 0 if you don't need to wait for such asynchcronous operations to finish
+            htmlToPdfConverter.ConversionDelay = 2;
+
+            // Set a property to enable the conversion of URI links from HTML to PDF
+            // If you leave the property not set conversion of URI links from HTML to PDF is enabled by default
+            htmlToPdfConverter.PdfDocumentOptions.LiveUrlsEnabled = true;
+
+
+            //pathString = System.IO.Path.Combine(@"C:\frankinginvoices\", lotno);
+
+            //// Verify the path that you have constructed.
+            //Console.WriteLine("Path to my file: {0}\n", pathString);
+
+            //// Check that the file doesn't already exist. If it doesn't exist, create
+            //// the file and write integers 0 - 99 to it.
+            //// DANGER: System.IO.File.Create will overwrite the file if it already exists.
+            //// This could happen even with random file names, although it is unlikely.
+            //if (!System.IO.File.Exists(pathString))
+            //{
+            //    using (System.IO.FileStream fs = System.IO.File.Create(pathString))
+            //    {
+
+            //    }
+            //}
+
+            // Convert HTML to PDF using the settings above
+            
+          
+           // string outPdfFile = @"C:\frankinginvoices\" + challanno + ".pdf";
+            string outPdfFile = downloadPath +@"\"+ fileName + ".pdf";
+            try
+            {
+                HtmlDocument htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(webdriver.PageSource);
+
+                var htmlBody = htmlDoc.DocumentNode.SelectSingleNode(@"//*[@id=""tcontent1""]");
+                HtmlNode oldChild = htmlBody.ChildNodes[1];
+                var date = DateTime.Today.ToShortDateString();
+
+                HtmlNode dateNode = HtmlNode.CreateNode(@String.Format("<p style = \" font-family: 'Ubuntu', sans-serif; font-size: 12px; padding-top: 16px; padding-bottom: 2px; \"> {0}  </p>", date));
+                htmlBody.InsertBefore(dateNode, oldChild);
+
+                HtmlNode newChild = HtmlNode.CreateNode(@"<img src=""https://k2.karnataka.gov.in/wps/PA_TestResponse/img/layer_10.png"" id=""logo"" style=""width: 100px; height: 100px; padding-left: 315px; padding-bottom: 3px; align: right; display: block; "">");
+
+                htmlBody.ReplaceChild(newChild, oldChild);
+
+                HtmlNodeCollection children = new HtmlNodeCollection(htmlBody);
+
+                HtmlNode h2Node = HtmlNode.CreateNode(@"<footer style=""float:right; padding-top: 16px;""><p style=""float:right; "">1/1</p></footer>");
+                htmlBody.AppendChildren(children);
+
+                children.Add(h2Node);
+
+                htmlBody.AppendChildren(children);
+
+                var htmlNodes = htmlDoc.GetElementbyId("printableRctDtl").InnerHtml;
+                htmlToPdfConverter.HtmlViewerZoom = 110;
+                htmlToPdfConverter.HtmlViewerWidth = 800;
+                htmlToPdfConverter.PdfDocumentOptions.LeftMargin = 40;
+                htmlToPdfConverter.PdfDocumentOptions.RightMargin = 40;
+
+                var pdfobj = htmlToPdfConverter.ConvertHtml(htmlNodes, "");
+
+                // Write the memory buffer in a PDF file
+                System.IO.File.WriteAllBytes(outPdfFile, pdfobj);
+            }
+            catch (Exception ex)
+            {
+                // The HTML to PDF conversion failed
+                return;
+            }
+
+
+            // Open the created PDF document in default PDF viewer
+            try
+            {
+                System.Diagnostics.Process.Start(outPdfFile);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public static string ProcessArticle(ArticleFeedModel model,bool isArticle5E,string downloadPath,string fileName) {
 
             _bankLogin = new BankAccountDetailsDto
             {
@@ -25,13 +122,14 @@ namespace FrankingPay.Core.Selenium
             //    UserName = "579091011.VIJAYALA",
             //    UserPassword = "Sriram@123"
             //};
-
+            
             try
             {
                 var webDriver = GetChromeDriver();
                 FeedStaticDate(model, isArticle5E);
                 var challan = FillArticle5E(webDriver, model);
                 ProcessToBank(webDriver);
+                GeneratePDF(webDriver, downloadPath, fileName);
                 return challan;
             }
             catch (Exception ex) {
@@ -212,23 +310,14 @@ namespace FrankingPay.Core.Selenium
                 var jsExecuter = (IJavaScriptExecutor)webDriver;
                 jsExecuter.ExecuteScript(" var elm=document.getElementById('printChallan'); setTimeout(function(){elm.click();},100);");
 
-                WaitFor(webDriver, 2);
-                webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
-                //foreach (string handle in webDriver.WindowHandles)
-                //{
-                //    IWebDriver popup = webDriver.SwitchTo().Window(handle);
-                //    var tit = popup.Title;
-                //    if (popup.Title.Contains("popup title"))
-                //    {
-                //        break;
-                //    }
-                //}
+                WaitFor(webDriver, 1);
+               // webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+               
 
-                var printBtn = webDriver.FindElement(By.XPath("//cr-button[@class='action-button']"));
-                printBtn.Click();
+                //var printBtn = webDriver.FindElement(By.XPath("//cr-button[@class='action-button']"));
+                //printBtn.Click();
 
-                //var downloadBtn = webDriver.FindElement(By.Id("SINGLEPDF"));
-                //downloadBtn.Click();
+                
             }
             catch (Exception ex) {
                 throw new Exception("bank process Failed.");

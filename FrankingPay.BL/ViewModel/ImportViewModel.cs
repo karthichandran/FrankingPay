@@ -130,7 +130,8 @@ namespace FrankingPay.BL.ViewModel
 
                var status= frankingService.SaveImportedData(FrankingList.ToList());
                 //Empty the grid
-                FrankingList = new ObservableCollection<FrankingStoreModel>();              
+                FrankingList = new ObservableCollection<FrankingStoreModel>();
+                TotalRecords = 0;
                 return status;
             }
             catch (Exception ex) {
