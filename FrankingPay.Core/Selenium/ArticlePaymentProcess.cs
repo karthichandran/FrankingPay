@@ -11,13 +11,14 @@ using Winnovative;
 using System.Xml;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace FrankingPay.Core.Selenium
 {
    public class ArticlePaymentProcess:Base
     {
         static BankAccountDetailsDto _bankLogin;
-        private static void GeneratePDF(IWebDriver webdriver, string downloadPath, string fileName)
+        private static string GeneratePDF(IWebDriver webdriver, string downloadPath, string fileName)
         {
             // Create a HTML to PDF converter object with default settings
             HtmlToPdfConverter htmlToPdfConverter = new HtmlToPdfConverter();
@@ -82,7 +83,8 @@ namespace FrankingPay.Core.Selenium
 
                 htmlBody.AppendChildren(children);
 
-                var htmlNodes = htmlDoc.GetElementbyId("printableRctDtl").InnerHtml;
+               // var htmlNodes = htmlDoc.GetElementbyId("printableRctDtl").InnerHtml;
+                var htmlNodes = htmlDoc.GetElementbyId("viewns_Z7_I2K611S0OGNNC0QA0KEELJ20G3_:printForm:printChallan").InnerHtml;
                 htmlToPdfConverter.HtmlViewerZoom = 110;
                 htmlToPdfConverter.HtmlViewerWidth = 800;
                 htmlToPdfConverter.PdfDocumentOptions.LeftMargin = 40;
@@ -90,27 +92,44 @@ namespace FrankingPay.Core.Selenium
 
                 var pdfobj = htmlToPdfConverter.ConvertHtml(htmlNodes, "");
 
+
                 // Write the memory buffer in a PDF file
                 System.IO.File.WriteAllBytes(outPdfFile, pdfobj);
+
+                string transactionNo;
+               
+                using (UglyToad.PdfPig.PdfDocument document = UglyToad.PdfPig.PdfDocument.Open(pdfobj))
+                {
+                    var page = document.GetPage(1);
+                   string text = string.Join(" ", page.GetWords());
+                    var pattern = string.Format(@"\b\w*" + "Transaction No." + @"\w*\s+\w+\b");
+                    string match = Regex.Match(text, @pattern).Groups[0].Value;
+                    string[] words = match.Split(' ');
+                     transactionNo = words[words.Length - 1];
+                }
+                return transactionNo;
             }
             catch (Exception ex)
             {
                 // The HTML to PDF conversion failed
-                return;
+                return "";
             }
 
 
             // Open the created PDF document in default PDF viewer
-            try
-            {
-                System.Diagnostics.Process.Start(outPdfFile);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            //try
+            //{
+            //    System.Diagnostics.Process.Start(outPdfFile);
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw;
+            //}
         }
-        public static string ProcessArticle(ArticleFeedModel model,bool isArticle5E,string downloadPath,string fileName) {
+
+     
+
+        public static Dictionary<string,string> ProcessArticle(ArticleFeedModel model,bool isArticle5E,string downloadPath,string fileName) {
 
             _bankLogin = new BankAccountDetailsDto
             {
@@ -125,18 +144,46 @@ namespace FrankingPay.Core.Selenium
             var webDriver = GetChromeDriver();
             try
             {
-               
-                FeedStaticDate(model, isArticle5E);
-                var challan = FillArticle5E(webDriver, model);
-                ProcessToBank(webDriver);
-                GeneratePDF(webDriver, downloadPath, fileName);
-                webDriver.Close();
-                return challan;
+
+                //FeedStaticDate(model, isArticle5E);
+                //var challan = FillArticle5E(webDriver, model);
+                //ProcessToBank(webDriver);
+
+                var challan = "CR0721003000526885";
+                NavigateToPrint(webDriver, challan);
+                fileName = fileName+"_"+challan;
+                string transactionNo= GeneratePDF(webDriver, downloadPath, fileName);
+                webDriver.Quit();
+
+                Dictionary<string, string> challanDet = new Dictionary<string, string>();
+                challanDet.Add("challan", challan);
+                challanDet.Add("transactionNo", transactionNo);
+
+                return challanDet;
             }
             catch (Exception ex) {
-                webDriver.Close();
                 throw ex;
             }
+        }
+
+        private static void NavigateToPrint(IWebDriver webDriver, string challanNo) {
+            webDriver.Navigate().GoToUrl("https://k2.karnataka.gov.in/wps/portal/Khajane-II/Scope/Remittance/SearchChallan/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziTSycnQ39nQ38LVx8LA0C_f3DQn28PAwNjI31w8EKDHAARwP9KGL041EQhd_4cP0ovFa4GBJQYGFEQIGBAVQBHlcU5IZGGGR6pgMA6Ql2sA!!/dz/d5/L2dBISEvZ0FBIS9nQSEh/");
+            WaitFor(webDriver, 3);
+            var addressElm = webDriver.FindElement(By.Id("viewns_Z7_I2K611S0OGNNC0QA0KEELJ20G3_:searchForm:refNo"));
+            addressElm.SendKeys(challanNo);
+            MessageBox.Show("Fill Captcha then press OK ", "Confirmation", MessageBoxButton.OK);
+
+            var searchBtn = webDriver.FindElement(By.Id("viewns_Z7_I2K611S0OGNNC0QA0KEELJ20G3_:searchForm:Search"));
+            searchBtn.Click();
+            WaitFor(webDriver, 2);
+            var searcchallanLinkBtn = webDriver.FindElement(By.Id("viewns_Z7_I2K611S0OGNNC0QA0KEELJ20G3_:searchForm:tableEx1:0:link1"));
+            searcchallanLinkBtn.Click();
+            WaitFor(webDriver, 3);
+            var printLinkBtn = webDriver.FindElement(By.Id("viewns_Z7_I2K611S0OGNNC0QA0KEELJ20G3_:searchForm:j_id_6f"));
+            printLinkBtn.Click();
+            WaitFor(webDriver, 3);
+
+           
         }
 
         private static string FillArticle5E(IWebDriver webDriver, ArticleFeedModel model) {
@@ -150,16 +197,20 @@ namespace FrankingPay.Core.Selenium
                 var tot = webDriver.WindowHandles.Count;
 
                 var tota= webDriver.WindowHandles.Count;
-
-
+                WaitFor(webDriver, 2);
+               
                 var firstNameElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:firstName"));
-                firstNameElm.SendKeys(model.FirstName);
+                firstNameElm.SendKeys(model.FirstName.Trim());
+                WaitFor(webDriver, 1);
 
-                var middleNameElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:firstName"));
-                middleNameElm.SendKeys(model.MiddleName);
-
+                if (!string.IsNullOrEmpty(model.MiddleName))
+                {
+                    var middleNameElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:middleName"));
+                    middleNameElm.SendKeys(model.MiddleName.Trim());
+                    WaitFor(webDriver, 1);
+                }
                 var lastNameElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:lastName"));
-                lastNameElm.SendKeys(model.LastName);
+                lastNameElm.SendKeys(model.LastName.Trim());
 
                 var addressElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:address"));
                 addressElm.SendKeys(model.Address);
@@ -178,8 +229,8 @@ namespace FrankingPay.Core.Selenium
                 var departmentElm = webDriver.FindElement(By.Id("tags"));
                 departmentElm.SendKeys(model.Department);
                 WaitFor(webDriver, 2);
-
-                var departmentPopupElm = webDriver.FindElement(By.Id("ui-id-3"));
+                ////*[@id="ui-id-436"]
+                var departmentPopupElm = webDriver.FindElement(By.XPath("//div[contains(.,'DEPARTMENT OF STAMPS AND REGISTRATION')]"));
                 departmentPopupElm.Click();
                 // WaitFor(webDriver, 3);
 
@@ -230,21 +281,31 @@ namespace FrankingPay.Core.Selenium
                 //Click submit button
                 var submitElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:submit_id"));
                 submitElm.Click();
-                WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-                var alert = wait.Until(ExpectedConditions.AlertIsPresent());
-                if (alert != null)
+                try
                 {
-                    alert.Accept();
-                    WaitFor(webDriver, 1);
-                    // Note : first name cleared automatically so fill again
-                    firstNameElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:firstName"));
-                    firstNameElm.SendKeys(model.FirstName);
-                    WaitFor(webDriver, 1);
+                    WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+                    var alert = wait.Until(ExpectedConditions.AlertIsPresent());
+                    if (alert != null)
+                    {
+                        alert.Accept();
+                        WaitFor(webDriver, 1);
+                        // Note : first name cleared automatically so fill again
+                        firstNameElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:firstName"));
+                        firstNameElm.Clear();
+                        firstNameElm.SendKeys(model.FirstName.Trim());
+                        WaitFor(webDriver, 1);
 
-                    submitElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:submit_id"));
-                    submitElm.Click();
-                    WaitFor(webDriver, 2);
+                        amountElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:amount2"));
+                        amountElm.Clear();
+                        amountElm.SendKeys(model.Amount);
+                        WaitFor(webDriver, 1);
+
+                        submitElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:submit_id"));
+                        submitElm.Click();
+                        WaitFor(webDriver, 4);
+                    }
                 }
+                catch (Exception ex) { }
 
                 var captcha = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:printForm:captchaText")).Text;
                 var captchaInputElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:printForm:captchaTextcode"));
@@ -267,7 +328,7 @@ namespace FrankingPay.Core.Selenium
                 return challanno;
             }
             catch (Exception ex) {
-                throw new Exception("Challan filling is Failed.");
+                throw new Exception("Challan filling  Failed");
             }
         }
 

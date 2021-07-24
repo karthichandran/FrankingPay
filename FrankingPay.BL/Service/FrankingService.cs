@@ -51,9 +51,9 @@ namespace FrankingPay.BL.Service
             return frankingList;
         }
 
-        public bool UpdateArticle5eChallanNo(int frankingId, string challanNo) {
+        public bool UpdateArticle5eChallanNo(int frankingId, string challanNo,string transactionNo) {
             try {                 
-                dataService.UpdateChallan5E(frankingId, challanNo);
+                dataService.UpdateChallan5E(frankingId, challanNo, transactionNo);
                 return true;
             }
             catch (Exception ex)
@@ -61,11 +61,11 @@ namespace FrankingPay.BL.Service
                 throw ex;
             }
         }
-        public bool UpdateArticle22ChallanNo(int frankingId, string challanNo)
+        public bool UpdateArticle22ChallanNo(int frankingId, string challanNo, string transactionNo)
         {
             try
             {
-                dataService.UpdateChallan22(frankingId, challanNo);
+                dataService.UpdateChallan22(frankingId, challanNo, transactionNo);
                 return true;
             }
             catch (Exception ex)
@@ -118,7 +118,9 @@ namespace FrankingPay.BL.Service
                 ArticleNo5payment = Convert.ToDecimal(source.Article5Amount),                
                 ArticleNo5ChallanNo = source.Article5ChallanNo,
                 ArticleNo22payment = Convert.ToDecimal(source.Article22PayAmount),
-                ArticleNo22ChallanNo = source.Article22ChallanNo               
+                ArticleNo22ChallanNo = source.Article22ChallanNo,
+                BankTransactionNo5E=source.BankTransactionNo5E,
+                BankTransactionNo22=source.BankTransactionNo22
             };
             return item;
         }

@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.34" />
+    <PackageReference Include="PdfPig" Version="0.1.4" />
+    <PackageReference Include="PresentationFramework" Version="4.6.0" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="91.0.4472.10100" />

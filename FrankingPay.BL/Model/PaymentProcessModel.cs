@@ -27,6 +27,8 @@ namespace FrankingPay.BL.Model
         private string _articleNo22ChallanNo;
         private DateTime _updated;
         private bool _isSelected;
+        private string _bankTransactionNo5e;
+        private string _bankTransactionNo22;
 
         public int FrankingId { get { return _frankingId; } set { _frankingId = value; OnPropertyChanged("FrankingId"); } }
         public string CompanyName { get { return _companyName; } set { _companyName = value; OnPropertyChanged("CompanyName"); } }
@@ -44,7 +46,8 @@ namespace FrankingPay.BL.Model
         public string ArticleNo22ChallanNo { get { return _articleNo22ChallanNo; } set { _articleNo22ChallanNo = value; OnPropertyChanged("ArticleNo22ChallanNo"); } }
         public DateTime Updated { get { return _updated; } set { _updated = value; OnPropertyChanged("Updated"); } }
         public bool IsSelected { get { return _isSelected; } set { _isSelected = value; OnPropertyChanged("IsSelected"); } }
-
+        public string BankTransactionNo5E { get { return _bankTransactionNo5e; } set { _bankTransactionNo5e = value; OnPropertyChanged("BankTransactionNo5E"); } }
+        public string BankTransactionNo22 { get { return _bankTransactionNo22; } set { _bankTransactionNo22 = value; OnPropertyChanged("BankTransaction22"); } }
 
 
         #region INotifyPropertyChanged Members  

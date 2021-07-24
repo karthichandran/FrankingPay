@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -123,7 +124,11 @@ namespace FrankingPay.UI.View
         {
             try
             {
-                var lotNo = lotTxt.Text;
+                progressbar.Visibility = Visibility.Visible;              
+
+
+
+                    var lotNo = lotTxt.Text;
                 if (lotNo == "")
                 {
                     MessageBox.Show("Please a Search By Lot No then try");
@@ -157,7 +162,8 @@ namespace FrankingPay.UI.View
 
                 if (!Directory.Exists(downloadPath + @"\FrankingPayments"))
                     Directory.CreateDirectory(downloadPath + @"\FrankingPayments");
-                downloadPath += @"\FrankingPayments\" + "FrankingPay" + "_" + DateTime.Now + ".xls";
+
+                downloadPath += @"\FrankingPayments\" + "DetailReport.xls";
                 var fs = File.Create(downloadPath);
                 var ms = new MemoryStream(ba);
                 ms.Seek(0, SeekOrigin.Begin);
@@ -165,7 +171,8 @@ namespace FrankingPay.UI.View
                 MessageBox.Show("File is downloaded successfully. Please Refer the path : " + downloadPath);
             }
             catch (Exception ex) {
-                MessageBox.Show("Failed to prepare details report");
+                MessageBox.Show(ex.Message);
+                //MessageBox.Show("Failed to prepare details report");
             }
         }
     }

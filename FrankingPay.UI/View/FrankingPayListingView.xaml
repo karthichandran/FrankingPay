@@ -12,7 +12,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="150"/>
             <RowDefinition Height="*" />
-            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -50,13 +49,41 @@
                         <Label Content="Reset" Foreground="#fff" FontSize="15" FontWeight="Black"/>
                     </StackPanel>
                 </Button>
+                <Button x:Name="ArticleProcess"  Click="ArticleProcess_Click"   FontWeight="Bold" Background="#29B6F6" BorderBrush="#29B6F6" Height="35" Margin=" 5 30 5 0" Padding="20 0 20 0" >
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <fn:FontAwesome Icon="Check"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
+                            <Label Content="Run" Foreground="#fff" FontSize="15" FontWeight="Black"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="AbstractRpt"  Click="AbstractRpt_Click"   FontWeight="Bold" Background="#29B6F6" BorderBrush="#29B6F6" Height="35" Margin=" 5 30 5 0" Padding="20 0 20 0" >
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <fn:FontAwesome Icon="Print"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
+                            <Label Content="Abstract Rport" Foreground="#fff" FontSize="15" FontWeight="Black"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="DetailRpt"  Click="DetailRpt_Click"   FontWeight="Bold" Background="#29B6F6" BorderBrush="#29B6F6" Height="35" Margin=" 5 30 5 0" Padding="20 0 20 0" >
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <fn:FontAwesome Icon="Print"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
+                            <Label Content="Detail Report" Foreground="#fff" FontSize="15" FontWeight="Black"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
             </StackPanel>
             <ProgressBar x:Name="progressbar" Height="35" Width="200"  Margin=" 0 20 0 20" Visibility="Hidden" IsIndeterminate = "True"/>
         </StackPanel>
         
         
         <StackPanel Grid.Row="1" MinHeight="250">
-            <DataGrid  x:Name="importGrid"  ItemsSource="{Binding FrankingProcessList,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  VerticalScrollBarVisibility="Auto" MaxHeight="600"
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <TextBlock Text=" Total Records :" FontSize="15" Margin="20 0 0 0" FontWeight="Medium" Foreground="#4FC3F7"/>
+                <TextBlock Text="{Binding TotalRecords, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" FontSize="16" Margin="5 0 0 0" FontWeight="Medium" Foreground="#0277BD"/>
+            </StackPanel>
+            <DataGrid  x:Name="importGrid"  ItemsSource="{Binding FrankingProcessList,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="600"
                        RowBackground="#ccffff" AlternatingRowBackground="#fff" CanUserAddRows="False"  Foreground="#898b8c" HorizontalAlignment="Center" Margin="20,30,20,40" Width="auto" 
                        VerticalAlignment="Top"  AutoGenerateColumns="False" Grid.ColumnSpan="4" BorderBrush="#FFDFE1E2">
                 <DataGrid.Columns>
@@ -268,6 +295,22 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTextColumn Header="Transaction No 5E" Binding="{Binding TransactionNo5E}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Height" Value="40"/>
+                                <Setter Property="FontSize" Value="16"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="#828385"/>
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="10,0,0,0" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Article No 22" Binding="{Binding ArticleNo22payment}">
                         <DataGridColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
@@ -314,6 +357,22 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTextColumn Header="Transaction No 22" Binding="{Binding TransactionNo22}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Height" Value="40"/>
+                                <Setter Property="FontSize" Value="16"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="#828385"/>
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="10,0,0,0" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTemplateColumn >
                         <DataGridTemplateColumn.CellTemplate >
                             <DataTemplate>
@@ -327,40 +386,7 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
-        
-        <StackPanel Grid.Row="2" Orientation="Vertical" >
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-            <TextBlock Text=" Total Records :" FontSize="15" Margin="20 0 0 0" FontWeight="Medium" Foreground="#4FC3F7"/>
-            <TextBlock Text="{Binding TotalRecords, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" FontSize="16" Margin="5 0 0 0" FontWeight="Medium" Foreground="#0277BD"/>
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <Button x:Name="ArticleProcess"  Click="ArticleProcess_Click"   FontWeight="Bold" Background="#607D8B" Margin="5 0 5 0">
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal">
-                            <fn:FontAwesome Icon="Check"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
-                            <Label Content="Run" Foreground="#fff" FontSize="15" FontWeight="Black"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Button>
-                <Button x:Name="AbstractRpt"  Click="AbstractRpt_Click"   FontWeight="Bold" Background="#607D8B" Margin="5 0 5 0">
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal">
-                            <fn:FontAwesome Icon="Print"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
-                            <Label Content="Abstract Rport" Foreground="#fff" FontSize="15" FontWeight="Black"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Button>
-                <Button x:Name="DetailRpt"  Click="DetailRpt_Click"   FontWeight="Bold" Background="#607D8B" Margin="5 0 5 0">
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal">
-                            <fn:FontAwesome Icon="Print"  Foreground="#fff" Margin="5 5 10 0" FontSize="20" />
-                            <Label Content="Detail Report" Foreground="#fff" FontSize="15" FontWeight="Black"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Button>
-            </StackPanel>
-
-        </StackPanel>
+        </StackPanel>        
+     
     </Grid>
 </UserControl>

@@ -61,10 +61,11 @@ namespace FrankingPay.BL.ViewModel
             var downloadFolder = downloadPath + @"\" + model.LotNo;
             if (!Directory.Exists(downloadFolder))
                 Directory.CreateDirectory(downloadFolder);
-           
+
+            Dictionary<string, string> challanDet = new Dictionary<string, string>();
             var fileName = model.ProjectName + "_" + model.UnitNo + "_5E";
-            var challanNo= ArticlePaymentProcess.ProcessArticle(articlefeedModel,true, downloadPath, fileName);
-            frankingService.UpdateArticle5eChallanNo(model.FrankingId, challanNo);
+            challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel,true, downloadPath, fileName);
+            frankingService.UpdateArticle5eChallanNo(model.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString());
             GetFrankingProcessList();
         }
 
@@ -80,10 +81,11 @@ namespace FrankingPay.BL.ViewModel
             var downloadFolder = downloadPath + @"\" + model.LotNo;
             if (!Directory.Exists(downloadFolder))
                 Directory.CreateDirectory(downloadFolder);
-           
+
+            Dictionary<string, string> challanDet = new Dictionary<string, string>();
             var fileName = model.ProjectName + "_" + model.UnitNo + "_22";
-            var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName);
-            frankingService.UpdateArticle22ChallanNo(model.FrankingId, challanNo);
+            challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName);
+            frankingService.UpdateArticle22ChallanNo(model.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString());
             GetFrankingProcessList();
         }
 
@@ -107,8 +109,7 @@ namespace FrankingPay.BL.ViewModel
                 return true;
 
             foreach (var item in items) {
-                try
-                {
+                
                     var articlefeedModel = new ArticleFeedModel
                     {
                         FirstName = item.FirstName,
@@ -117,14 +118,21 @@ namespace FrankingPay.BL.ViewModel
                         Amount = Convert.ToInt32(item.ArticleNo5payment).ToString()
                     };
                     //Articel 5E
+                   
                     var downloadFolder = downloadPath + @"\" + item.LotNo;
                     if (!Directory.Exists(downloadFolder))
                         Directory.CreateDirectory(downloadFolder);
-
+                Dictionary<string, string> challanDet = new Dictionary<string, string>();
                     var fileName = item.ProjectName + "_" + item.UnitNo + "_5E";
-                    var challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, true, downloadFolder, fileName);
-                    frankingService.UpdateArticle5eChallanNo(item.FrankingId, challanNo);
-
+                    for (var i = 0; i < 2; i++) {
+                        try
+                        {
+                        challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel, true, downloadFolder, fileName);
+                        frankingService.UpdateArticle5eChallanNo(item.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString());
+                        break;
+                        }
+                        catch (Exception ex) { }
+                    }
                     //Articel 22
                     articlefeedModel = new ArticleFeedModel
                     {
@@ -133,13 +141,21 @@ namespace FrankingPay.BL.ViewModel
                         LastName = item.LastName,
                         Amount = Convert.ToInt32(item.ArticleNo22payment).ToString()
                     };
+
+                challanDet = new Dictionary<string, string>();
+                fileName = item.ProjectName + "_" + item.UnitNo + "_22";
+                    for (var i = 0; i < 2; i++) {
+                        try {
+                        challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName);
+                        frankingService.UpdateArticle22ChallanNo(item.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString());
+                        break;
+                        }
+                        catch(Exception ex)
+                        {
+                        }
+                    }
                    
-                    fileName = item.ProjectName + "_" + item.UnitNo + "_22";
-                    challanNo = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName);
-                    frankingService.UpdateArticle22ChallanNo(item.FrankingId, challanNo);
-                }
-                catch (Exception ex) { 
-                }
+               
             
             }
             GetFrankingProcessList();
@@ -149,6 +165,8 @@ namespace FrankingPay.BL.ViewModel
 
 
         public byte[] AbstractReport() {
+                      
+
             var item = FrankingProcessList.GroupBy(x => x.CompanyName);
             var lotNum = FrankingProcessList[0].LotNo;
             List<LotAbstractModel> reportModel = new List<LotAbstractModel>();
@@ -199,72 +217,86 @@ namespace FrankingPay.BL.ViewModel
         }
 
         public byte[] ExportToExcelReport() {
+            try
+            {
+                var settings = FluentSettings.For<PaymentProcessModel>();
+                settings.HasAuthor("Franking Payment");
+                settings.HasFreezePane(0, 1);
+                settings.HasSheetConfiguration(0, "sheet 1", 1, true);
 
-            var settings = FluentSettings.For<PaymentProcessModel>();
-            settings.HasAuthor("REpro Services");
-            settings.HasFreezePane(0, 1);
-            settings.HasSheetConfiguration(0, "sheet 1", 1, true);
+                settings.Property(_ => _.CompanyName)
+                    .HasColumnTitle("Company Name")
+                    .HasColumnIndex(0);
 
-            settings.Property(_ => _.CompanyName)
-                .HasColumnTitle("Company Name")
-                .HasColumnIndex(0);
+                settings.Property(_ => _.ProjectName)
+                   .HasColumnTitle("Project Name")
+                   .HasColumnIndex(1);
 
-            settings.Property(_ => _.ProjectName)
-               .HasColumnTitle("Project Name")
-               .HasColumnIndex(1);
+                settings.Property(_ => _.FirstName)
+                 .HasColumnTitle("First Name")
+                 .HasColumnIndex(2);
 
-            settings.Property(_ => _.FirstName)
-             .HasColumnTitle("First Name")
-             .HasColumnIndex(2);
+                settings.Property(_ => _.MiddleName)
+                    .HasColumnTitle("Middle Name")
+                    .HasColumnIndex(3);
 
-            settings.Property(_ => _.MiddleName)
-                .HasColumnTitle("Middle Name")
-                .HasColumnIndex(3);
+                settings.Property(_ => _.LastName)
+                   .HasColumnTitle("Last Name")
+                   .HasColumnIndex(4);
 
-            settings.Property(_ => _.LastName)
-               .HasColumnTitle("Last Name")
-               .HasColumnIndex(4);           
+                settings.Property(_ => _.LotNo)
+                   .HasColumnTitle("Lot No")
+                   .HasColumnIndex(5);
 
-            settings.Property(_ => _.LotNo)
-               .HasColumnTitle("Lot No")
-               .HasColumnIndex(5);
+                settings.Property(_ => _.UnitNo)
+                   .HasColumnTitle("Unit No")
+                   .HasColumnIndex(6);
 
-            settings.Property(_ => _.UnitNo)
-               .HasColumnTitle("Unit No")
-               .HasColumnIndex(6);
+                settings.Property(_ => _.InvoiceDocNo)
+                  .HasColumnTitle("Invoice No")
+                  .HasColumnIndex(7);
 
-            settings.Property(_ => _.InvoiceDocNo)
-              .HasColumnTitle("Invoice No")
-              .HasColumnIndex(7);
+                settings.Property(_ => _.SaleValue)
+                   .HasColumnTitle("Sale Value")
+                   .HasColumnIndex(8);
 
-            settings.Property(_ => _.SaleValue)
-               .HasColumnTitle("Sale Value")
-               .HasColumnIndex(8);
+                settings.Property(_ => _.ArticleNo5payment)
+                    .HasColumnTitle("Article 5E Payment")
+                    .HasColumnIndex(9);
 
-            settings.Property(_ => _.ArticleNo5payment)
-                .HasColumnTitle("Article 5E Payment")
-                .HasColumnIndex(9);
+                settings.Property(_ => _.ArticleNo5ChallanNo)
+                  .HasColumnTitle("Article 5E Challan")
+                  .HasColumnIndex(10);
 
-            settings.Property(_ => _.ArticleNo5ChallanNo)
-              .HasColumnTitle("Article 5E Challan")
-              .HasColumnIndex(10);
+                settings.Property(_ => _.BankTransactionNo5E)
+                 .HasColumnTitle("Transaction No 5E")
+                 .HasColumnIndex(11);
 
-            settings.Property(_ => _.ArticleNo22payment)
-              .HasColumnTitle("Article 22 payment")
-              .HasColumnIndex(11);
+                settings.Property(_ => _.ArticleNo22payment)
+                  .HasColumnTitle("Article 22 payment")
+                  .HasColumnIndex(12);
 
-            settings.Property(_ => _.ArticleNo22ChallanNo)
-             .HasColumnTitle("Article 77 Challan")
-             .HasColumnIndex(12);
+                settings.Property(_ => _.ArticleNo22ChallanNo)
+                 .HasColumnTitle("Article 22 Challan")
+                 .HasColumnIndex(13);
 
-            settings.Property(_ => _.IsSelected).Ignored();
-            settings.Property(_ => _.FrankingId).Ignored();
-            settings.Property(_ => _.Updated).Ignored();
-            settings.Property(_ => _.IsSelected).Ignored();
+                settings.Property(_ => _.BankTransactionNo22)
+                .HasColumnTitle("Transaction No 22")
+                .HasColumnIndex(14);
 
-            var ms = FrankingProcessList.ToExcelBytes();
 
-            return ms;
+                settings.Property(_ => _.IsSelected).Ignored();
+                settings.Property(_ => _.FrankingId).Ignored();
+                settings.Property(_ => _.Updated).Ignored();
+                settings.Property(_ => _.IsSelected).Ignored();
+
+                var ms = FrankingProcessList.ToExcelBytes();
+
+                return ms;
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
         }
     }
 }

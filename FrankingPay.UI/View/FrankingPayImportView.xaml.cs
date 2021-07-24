@@ -35,6 +35,7 @@ namespace FrankingPay.UI.View
        
         private void importBtn_Click(object sender, RoutedEventArgs e)
         {
+
             try
             {
                 progressbar.Visibility = Visibility.Visible;

@@ -15,21 +15,32 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="*" />            
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <Button x:Name="importBtn"  Width="150" Height="35" Margin=" 0 30 0 0" Padding="20 0 20 0"  Background="#29B6F6" BorderBrush="#29B6F6" Click="importBtn_Click">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin=" 0 30 0 0">
+            <Button x:Name="importBtn"  Width="150" Height="35" Margin=" 5 0 5 0" Padding="20 0 20 0"  Background="#29B6F6" BorderBrush="#29B6F6" Click="importBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <fn:FontAwesome Icon="ArrowDown"  Foreground="#fff" Margin="0 5 10 0" FontSize="20" />
                     <Label Content="Import" Foreground="#fff" FontSize="15" FontWeight="Black"/>
                 </StackPanel>
             </Button>
+                <Button x:Name="savebtn" Click="savebtn_Click" Width="120" Height="35" Margin=" 5 0 5 0" Foreground="#fff" Background="#00C853" BorderBrush="#00C853" >
+                    <StackPanel Orientation="Horizontal">
+                        <fn:FontAwesome Icon="Save"  Foreground="#fff" Margin="0 5 10 0" FontSize="20"  />
+                        <Label Content="Save" Foreground="#fff" FontSize="15" FontWeight="Black"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
             <ProgressBar x:Name="progressbar" Height="35" Width="200"  Margin=" 0 20 0 20" Visibility="Hidden" IsIndeterminate = "True"/>
         </StackPanel>
-        <StackPanel Grid.Row="1" MinHeight="250">
-            <DataGrid  x:Name="importGrid"  ItemsSource="{Binding FrankingList,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" RowHeight="35" VerticalScrollBarVisibility="Auto" MaxHeight="600"
-                       RowBackground="#ccffff" AlternatingRowBackground="#fff" CanUserAddRows="False"  Foreground="#898b8c" HorizontalAlignment="Center" Margin="20,30,20,40" Width="auto" 
+        <StackPanel Grid.Row="1" MinHeight="250" >
+            <StackPanel  Orientation="Horizontal">
+                <TextBlock Text=" Total Records :" FontSize="15" Margin="20 0 0 0" FontWeight="Medium" Foreground="#4FC3F7"/>
+                <TextBlock Text="{Binding TotalRecords, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" FontSize="16" Margin="5 0 0 0" FontWeight="Medium" Foreground="#0277BD"/>
+            </StackPanel>
+            <DataGrid  x:Name="importGrid"  ItemsSource="{Binding FrankingList,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" RowHeight="35" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" MaxHeight="600"
+                       RowBackground="#ccffff" AlternatingRowBackground="#fff" CanUserAddRows="False"  Foreground="#898b8c" HorizontalAlignment="Center" Margin="20,30,20,40"  
                        VerticalAlignment="Top"  AutoGenerateColumns="False" Grid.ColumnSpan="4" BorderBrush="#FFDFE1E2" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Customer Name" Binding="{Binding CompanyName}">
@@ -176,18 +187,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
-        <StackPanel Grid.Row="2">
-            <Button x:Name="savebtn" Click="savebtn_Click" Width="120" Height="35" Foreground="#fff" Background="#00C853" BorderBrush="#00C853" >
-                <StackPanel Orientation="Horizontal">
-                    <fn:FontAwesome Icon="Save"  Foreground="#fff" Margin="0 5 10 0" FontSize="20"  />
-                    <Label Content="Save" Foreground="#fff" FontSize="15" FontWeight="Black"/>
-                </StackPanel>
-            </Button>
-            <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <TextBlock Text=" Total Records :" FontSize="15" Margin="20 0 0 0" FontWeight="Medium" Foreground="#4FC3F7"/>
-                <TextBlock Text="{Binding TotalRecords, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" FontSize="16" Margin="5 0 0 0" FontWeight="Medium" Foreground="#0277BD"/>
-
-            </StackPanel>
-        </StackPanel>
+       
     </Grid>
 </UserControl>

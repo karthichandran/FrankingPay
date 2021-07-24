@@ -25,6 +25,8 @@ namespace FrankingPay.BL.Model
         private decimal _articleNo22payment;
         private DateTime _created;
         private DateTime _updated;
+        private string _bankTransactionNo5e;
+        private string _bankTransactionNo22;
 
         public int Index { get { return _index; } set { _index = value; OnPropertyChanged("Index"); } }
         public int FrankingId { get { return _frankingId; } set { _frankingId = value; OnPropertyChanged("FrankingId"); } }
@@ -42,7 +44,8 @@ namespace FrankingPay.BL.Model
         public DateTime Created { get { return _created; } set { _created = value; OnPropertyChanged("Created"); } }
         public DateTime Updated { get { return _updated; } set { _updated = value; OnPropertyChanged("Updated"); } }
 
-
+        public string BankTransactionNo5E { get { return _bankTransactionNo5e; } set { _bankTransactionNo5e = value; OnPropertyChanged("BankTransactionNo5E"); } }
+        public string BankTransactionNo22 { get { return _bankTransactionNo22; } set { _bankTransactionNo22 = value; OnPropertyChanged("BankTransaction22"); } }
 
         #region INotifyPropertyChanged Members  
 

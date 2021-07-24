@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using FrankingPay.BL.Service;
+using System.Text.RegularExpressions;
 
 namespace FrankingPay.BL.ViewModel
 {
@@ -80,6 +81,7 @@ namespace FrankingPay.BL.ViewModel
                 {
 
                     var allotte = row[6].ToString().Trim();
+                    allotte= Regex.Replace(allotte, "[^a-zA-Z0-9]+", " ", RegexOptions.Compiled);
                     var name = allotte.Split(' ');
                     string firstName="", middleName="", lastName="";
                     if (name.Length == 1)

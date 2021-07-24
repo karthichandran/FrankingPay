@@ -22,5 +22,7 @@ namespace FrankingPay.DAL.Models
         public decimal Article22PayAmount { get; set; }
         public string Article22ChallanNo { get; set; }
         public DateTime Article22PaidDate { get; set; }
+        public string BankTransactionNo5E { get; set; }
+        public string BankTransactionNo22 { get; set; }
     }
 }
