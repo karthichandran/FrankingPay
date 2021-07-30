@@ -26,10 +26,10 @@ namespace FrankingPay.BL.ViewModel
         public int TotalRecords { get { return _totalRecords; }  set { _totalRecords = value;RaisePropertyChange("TotalRecords"); } }
 
         private FrankingService frankingService { get; set; }
-        public ListingViewModel()
+        public ListingViewModel(string connectionString)
         {
             FrankingProcessList = new ObservableCollection<PaymentProcessModel>();
-            frankingService = new FrankingService();
+            frankingService = new FrankingService(connectionString);
         }  
        
 
@@ -213,15 +213,6 @@ namespace FrankingPay.BL.ViewModel
                     Article5E=totalArticle5eVal
                 }) ;
             }
-
-            reportModel.Add(new LotAbstractModel
-            {
-                Companyname = "Total",
-                LotNo = "",
-                SaleValue = FrankingProcessList.Sum(x => x.SaleValue),
-                Article22 = FrankingProcessList.Sum(x => x.ArticleNo5payment),
-                Article5E = FrankingProcessList.Sum(x => x.ArticleNo22payment),
-            });
 
             var settings = FluentSettings.For<LotAbstractModel>();
             settings.HasAuthor("Franking Payment");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,7 @@ namespace FrankingPay.UI.View
         public FrankingPayImportView()
         {
             InitializeComponent();
-            ViewModel = new ImportViewModel();
+            ViewModel = new ImportViewModel(ConfigurationManager.ConnectionStrings["local"].ConnectionString);
             DataContext = ViewModel;
             savebtn.Visibility = Visibility.Hidden;
         }

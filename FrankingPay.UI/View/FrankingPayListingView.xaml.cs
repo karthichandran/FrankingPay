@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using FrankingPay.BL.Model;
 using FrankingPay.BL.ViewModel;
 using Microsoft.Win32;
+using System.Configuration;
 namespace FrankingPay.UI.View
 {
     /// <summary>
@@ -28,7 +29,7 @@ namespace FrankingPay.UI.View
         public FrankingPayListingView()
         {
             InitializeComponent();
-            ViewModel = new ListingViewModel();
+            ViewModel = new ListingViewModel(ConfigurationManager.ConnectionStrings["local"].ConnectionString);
             DataContext = ViewModel;
         }
         private string downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();

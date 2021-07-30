@@ -25,10 +25,10 @@ namespace FrankingPay.BL.ViewModel
         public int TotalRecords { get { return _totalRecords; } set { _totalRecords = value; RaisePropertyChange("TotalRecords"); } }
 
         private FrankingService frankingService { get; set; }
-        public ImportViewModel()
+        public ImportViewModel(string connectionString)
         {
             FrankingList = new ObservableCollection<FrankingStoreModel>();
-            frankingService = new FrankingService();
+            frankingService = new FrankingService(connectionString);
         }              
 
         public bool ImportData(MemoryStream ms) {

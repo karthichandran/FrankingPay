@@ -10,8 +10,8 @@ namespace FrankingPay.BL.Service
    public class FrankingService
     {
         private SqlCrud dataService;
-        public FrankingService() {
-            dataService = new SqlCrud("");
+        public FrankingService(string connectionString) {
+            dataService = new SqlCrud(connectionString);
         }
         public bool SaveImportedData(List<FrankingStoreModel> frankingPays) {
             try

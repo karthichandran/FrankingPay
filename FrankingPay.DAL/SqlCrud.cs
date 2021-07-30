@@ -14,9 +14,9 @@ namespace FrankingPay.DAL
 
         public SqlCrud(string connectionString)
         {
-            //_connectionString = connectionString;
+            _connectionString = connectionString;
 
-           _connectionString = @"Data Source=DESKTOP-TV5J5QA\SQLEXPRESS;Initial Catalog=FrankingPay; User ID=karthi; Password =matrix291; Pooling = False";
+          // _connectionString = @"Data Source=DESKTOP-TV5J5QA\SQLEXPRESS;Initial Catalog=FrankingPay; User ID=karthi; Password =matrix291; Pooling = False";
         //_connectionString = @"Data Source=DESKTOP-FDSUNML\SQLEXPRESS;Initial Catalog=FrankingPay;Integrated Security=True";
         }
 
@@ -53,7 +53,7 @@ namespace FrankingPay.DAL
                              FROM dbo.FrankingStore
                             WHERE  (@company='' or CompanyName like '%'+@company+'%')
                              and (@project='' or ProjectName like '%'+@project+'%')
-and (@lotNo='' or LotNo like '%'+@lotNo+'%') and (@unitNo='' or UnitNo like '%'+@unitNo+'%') 
+and (@lotNo='' or LotNo =@lotNo) and (@unitNo='' or UnitNo like '%'+@unitNo+'%') 
 and( (@name='' or FirstName like '%'+@name+'%') or (@name='' or MiddleName like '%'+@name+'%') or (@name='' or LastName like '%'+@name+'%'))";
                 payments.PendingFrankingPaymentsList = db.LoadData<FrankingStore, dynamic>(sql, new { company, project, lotNo, unitNo, name }, _connectionString);
 
