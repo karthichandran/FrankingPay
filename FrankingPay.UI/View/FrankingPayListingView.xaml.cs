@@ -31,7 +31,7 @@ namespace FrankingPay.UI.View
             ViewModel = new ListingViewModel();
             DataContext = ViewModel;
         }
-
+        private string downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
         private void SearchBtn_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -51,9 +51,6 @@ namespace FrankingPay.UI.View
             {
                 progressbar.Visibility = Visibility.Visible;
                 var model = (sender as Button).DataContext as PaymentProcessModel;
-
-                var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
-              
               
                  ViewModel.ProcessArticle5E(model, downloadPath);
                 progressbar.Visibility = Visibility.Hidden;
@@ -70,7 +67,6 @@ namespace FrankingPay.UI.View
             {
                 progressbar.Visibility = Visibility.Visible;
                 var model = (sender as Button).DataContext as PaymentProcessModel;
-                var downloadPath = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
                 ViewModel.ProcessArticle22(model, downloadPath);
                 progressbar.Visibility = Visibility.Hidden;
             }
@@ -173,6 +169,42 @@ namespace FrankingPay.UI.View
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
                 //MessageBox.Show("Failed to prepare details report");
+            }
+        }
+
+
+        private void Challan22Download_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                progressbar.Visibility = Visibility.Visible;
+                var model = (sender as Button).DataContext as PaymentProcessModel;
+
+                ViewModel.DownloadChallan(model, downloadPath,false);
+                progressbar.Visibility = Visibility.Hidden;
+                MessageBox.Show("File is downloaded");
+            }
+            catch (Exception ex)
+            {
+                progressbar.Visibility = Visibility.Hidden;
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
+
+        private void Challan5eDownload_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                progressbar.Visibility = Visibility.Visible;
+                var model = (sender as Button).DataContext as PaymentProcessModel;
+                ViewModel.DownloadChallan(model, downloadPath, true);
+                progressbar.Visibility = Visibility.Hidden;
+                MessageBox.Show("File is downloaded");
+            }
+            catch (Exception ex)
+            {
+                progressbar.Visibility = Visibility.Hidden;
+                MessageBox.Show(ex.Message, "Error");
             }
         }
     }

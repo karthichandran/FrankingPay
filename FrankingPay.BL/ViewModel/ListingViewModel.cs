@@ -100,6 +100,34 @@ namespace FrankingPay.BL.ViewModel
             }
         }
 
+        public void DownloadChallan(PaymentProcessModel model, string downloadPath, bool isChallan5e) {
+            try
+            {
+                string challanNo = "", fileName = "";
+
+                if (isChallan5e)
+                {
+                    challanNo = model.ArticleNo5ChallanNo;
+                    fileName = model.ProjectName + "_" + model.UnitNo + "_5E";
+                }
+                else
+                {
+                    challanNo = model.ArticleNo22ChallanNo;
+                    fileName = model.ProjectName + "_" + model.UnitNo + "_22";
+                }
+                if (string.IsNullOrEmpty(challanNo))
+                    return;
+
+                var downloadFolder = downloadPath + @"\" + model.LotNo;
+                if (!Directory.Exists(downloadFolder))
+                    Directory.CreateDirectory(downloadFolder);
+                ArticlePaymentProcess.DownloadChallan(challanNo, downloadFolder, fileName);
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
+        }
+
         public bool ProcessArticleForSelectedRecord( string downloadPath) {
 
             var items = FrankingProcessList.Where(x => x.IsSelected == true);
@@ -154,8 +182,6 @@ namespace FrankingPay.BL.ViewModel
                         {
                         }
                     }
-                   
-               
             
             }
             GetFrankingProcessList();

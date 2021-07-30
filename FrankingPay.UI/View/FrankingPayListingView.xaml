@@ -295,6 +295,15 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="Challan5eDownload" Margin="5,5,5,5" Padding="3,3,3,3" Click="Challan5eDownload_Click"  Background="Transparent" BorderBrush="Transparent" FontSize="14" FontWeight="Bold">
+                                    <fn:FontAwesome Icon="Download"  Foreground="#29B6F6" Margin="5 5 10 0" FontSize="20" />
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Transaction No 5E" Binding="{Binding TransactionNo5E}">
                         <DataGridColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
@@ -357,6 +366,15 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="Challan22Download" Margin="5,5,5,5" Padding="3,3,3,3" Click="Challan22Download_Click"  Background="Transparent" BorderBrush="Transparent" FontSize="14" FontWeight="Bold">
+                                    <fn:FontAwesome Icon="Download"  Foreground="#29B6F6" Margin="5 5 10 0" FontSize="20" />
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Transaction No 22" Binding="{Binding TransactionNo22}">
                         <DataGridColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
