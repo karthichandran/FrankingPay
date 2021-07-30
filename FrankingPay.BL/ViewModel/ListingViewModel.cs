@@ -207,12 +207,21 @@ namespace FrankingPay.BL.ViewModel
                 reportModel.Add(new LotAbstractModel
                 {
                     Companyname = companyName,
-                    LotNo= lotNum,
+                    LotNo= lotNum.ToString(),
                     SaleValue=totalSaleVal,
                     Article22=totalArticle22Val,
                     Article5E=totalArticle5eVal
                 }) ;
             }
+
+            reportModel.Add(new LotAbstractModel
+            {
+                Companyname = "Total",
+                LotNo = "",
+                SaleValue = FrankingProcessList.Sum(x => x.SaleValue),
+                Article22 = FrankingProcessList.Sum(x => x.ArticleNo5payment),
+                Article5E = FrankingProcessList.Sum(x => x.ArticleNo22payment),
+            });
 
             var settings = FluentSettings.For<LotAbstractModel>();
             settings.HasAuthor("Franking Payment");
