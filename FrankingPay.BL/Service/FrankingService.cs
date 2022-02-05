@@ -61,6 +61,20 @@ namespace FrankingPay.BL.Service
                 throw ex;
             }
         }
+
+        public bool UpdateANo(int frankingId, string challanNo, string transactionNo)
+        {
+            try
+            {
+                dataService.UpdateChallan5E(frankingId, challanNo, transactionNo);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public bool UpdateArticle22ChallanNo(int frankingId, string challanNo, string transactionNo)
         {
             try

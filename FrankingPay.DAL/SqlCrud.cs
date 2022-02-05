@@ -49,7 +49,7 @@ namespace FrankingPay.DAL
                 string sql = @"SELECT FraankingPayId,CompanyName,ProjectName,UnitNo, 
                                   LotNo,InvoiceDocNo,FirstName,MiddleName,LastName,
                                   SaleValue,Article5Amount,Article5ChallanNo,Article5PaidDate,
-                                  Article22PayAmount,Article22ChallanNo,Article22PaidDate
+                                  Article22PayAmount,Article22ChallanNo,Article22PaidDate,  BankTransactionNo5E,BankTransactionNo22
                              FROM dbo.FrankingStore
                             WHERE  (@company='' or CompanyName like '%'+@company+'%')
                              and (@project='' or ProjectName like '%'+@project+'%')

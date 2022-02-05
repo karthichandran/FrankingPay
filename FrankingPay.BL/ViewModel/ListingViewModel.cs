@@ -64,7 +64,7 @@ namespace FrankingPay.BL.ViewModel
 
             Dictionary<string, string> challanDet = new Dictionary<string, string>();
             var fileName = model.ProjectName + "_" + model.UnitNo + "_5E";
-            challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel,true, downloadPath, fileName);
+            challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel,true, downloadFolder, fileName);
             frankingService.UpdateArticle5eChallanNo(model.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString());
             GetFrankingProcessList();
         }
@@ -121,7 +121,7 @@ namespace FrankingPay.BL.ViewModel
                 var downloadFolder = downloadPath + @"\" + model.LotNo;
                 if (!Directory.Exists(downloadFolder))
                     Directory.CreateDirectory(downloadFolder);
-                ArticlePaymentProcess.DownloadChallan(challanNo, downloadFolder, fileName);
+               // ArticlePaymentProcess.DownloadChallan(challanNo, downloadFolder, fileName);
             }
             catch (Exception ex) {
                 throw ex;
@@ -199,7 +199,7 @@ namespace FrankingPay.BL.ViewModel
             foreach(var itm in item)
             {
                 var companyName = itm.Key;
-                var comCOunt = item.Count();
+                var comCOunt = itm.Count();
                 var totalSaleVal=itm.Sum(x => x.SaleValue);
                 var totalArticle5eVal=itm.Sum(x => x.ArticleNo5payment);
                 var totalArticle22Val=itm.Sum(x => x.ArticleNo22payment);
@@ -207,12 +207,23 @@ namespace FrankingPay.BL.ViewModel
                 reportModel.Add(new LotAbstractModel
                 {
                     Companyname = companyName,
+                    totalTransaction=comCOunt,
                     LotNo= lotNum.ToString(),
                     SaleValue=totalSaleVal,
                     Article22=totalArticle22Val,
                     Article5E=totalArticle5eVal
                 }) ;
             }
+
+            reportModel.Add(new LotAbstractModel
+            {
+                Companyname = "Total",
+                LotNo = "",
+                totalTransaction= reportModel.Sum(x=>x.totalTransaction),
+                SaleValue = FrankingProcessList.Sum(x => x.SaleValue),
+                Article5E = FrankingProcessList.Sum(x => x.ArticleNo5payment),
+                Article22 = FrankingProcessList.Sum(x => x.ArticleNo22payment),
+            });
 
             var settings = FluentSettings.For<LotAbstractModel>();
             settings.HasAuthor("Franking Payment");
