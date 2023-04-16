@@ -58,7 +58,7 @@ namespace FrankingPay.UI.View
             }
             catch (Exception ex)
             {
-                 MessageBox.Show("Filed to import file");
+                 MessageBox.Show("Filed to import file : "+ex.Message);
             }           
 
         }

@@ -12,6 +12,7 @@ using System.Xml;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using Anticaptcha_example.Api;
 
 namespace FrankingPay.Core.Selenium
 {
@@ -358,12 +359,12 @@ namespace FrankingPay.Core.Selenium
         //    }
         //}
 
-        public static Dictionary<string, string> ProcessArticle(ArticleFeedModel model, bool isArticle5E, string downloadPath, string fileName)
+        public static Dictionary<string, string> ProcessArticle(ArticleFeedModel model, bool isArticle5E, string downloadPath, string fileName,int frankingID)
         {
             _bankLogin = new BankAccountDetailsDto
             {
                 UserName = "582266194.RGANESH",
-                UserPassword = "Rajalara@123"
+                UserPassword = "Rajalara@321"
             };
 
             //_bankLogin = new BankAccountDetailsDto
@@ -381,8 +382,9 @@ namespace FrankingPay.Core.Selenium
             {
 
                 FeedStaticData(model, isArticle5E);
+                string remark = (isArticle5E) ? frankingID + "_Article_5E" : frankingID + "_Article_22";
                 var challan = FillArticle5E(webDriver, model);
-                ProcessToBank(webDriver);
+                ProcessToBank(webDriver, remark);
 
                 //var challan = "CR0721003000526885";
                 //NavigateToPrint(webDriver, challan);
@@ -571,10 +573,22 @@ namespace FrankingPay.Core.Selenium
                 }
                 catch (Exception ex) { }
 
-                var captcha = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:printForm:captchaText")).Text;
-                var captchaInputElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:printForm:captchaTextcode"));
-                captchaInputElm.SendKeys(captcha);
-                WaitFor(webDriver, 4);
+                //var captcha = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:printForm:captchaText")).Text;
+
+                var captcha = ReadCaptcha(webDriver);
+                if (captcha == "")
+                {
+                    MessageBoxResult result = MessageBox.Show("Please fill the captcha and press OK button.", "Confirmation",
+                                                     MessageBoxButton.OK, MessageBoxImage.Asterisk,
+                                                     MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                else
+                {
+
+                    var captchaInputElm = webDriver.FindElement(By.Id("txt_Captcha"));
+                    captchaInputElm.SendKeys(captcha);
+                    WaitFor(webDriver, 2);
+                }            
 
                 //Click Confirm button
                 var confirmElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:printForm:j_id_33"));
@@ -596,7 +610,7 @@ namespace FrankingPay.Core.Selenium
             }
         }
 
-        private static void ProcessToBank(IWebDriver webDriver)
+        private static void ProcessToBank(IWebDriver webDriver,string remark="")
         {
             try
             {
@@ -613,6 +627,16 @@ namespace FrankingPay.Core.Selenium
                 var proceedBtn = webDriver.FindElement(By.Id("VALIDATE_CREDENTIALS1"));
                 proceedBtn.Click();
                 WaitForReady(webDriver);
+
+                //Applr remarks
+                WaitFor(webDriver, 1);
+                if (!string.IsNullOrEmpty(remark))
+                {
+                    var remarkTxt = webDriver.FindElement(By.Id("TranRequestManagerFG.PMT_RMKS"));
+                    remarkTxt.SendKeys(remark);
+                }
+                //End remarks
+
 
                 var gridAuth = webDriver.FindElements(By.Id("TranRequestManagerFG.AUTH_MODES"));
                 gridAuth[1].Click();
@@ -777,6 +801,48 @@ namespace FrankingPay.Core.Selenium
             var thirstInput = webDriver.FindElement(By.Id("TranRequestManagerFG.GRID_CARD_AUTH_VALUE_3__"));
             thirstInput.SendKeys(grid[thirdLetter]);
 
+        }
+
+        private static string ReadCaptcha(IWebDriver webDriver) {
+
+            var jsExecuter = (IJavaScriptExecutor)webDriver;
+            var base64string = jsExecuter.ExecuteScript(@"
+    var c = document.createElement('canvas');
+    var ctx = c.getContext('2d');
+    var img = document.getElementById('viewns_Z7_48CC1OC0O0VID0QCG60F962085_:printForm:captcha');
+    c.height=img.naturalHeight;
+    c.width=img.naturalWidth;
+    ctx.drawImage(img, 0, 0,img.naturalWidth, img.naturalHeight);
+    var base64String = c.toDataURL();
+    return base64String;
+    ") as string;
+
+
+            var base64 = base64string.Split(',').Last();
+            // var ClientKey = "db027000f08afb6176183e15a137b13a";  //test
+            var ClientKey = "f35d396e27db69a278ead2739cb85e99";
+            var captcha = "";
+            var api = new ImageToText
+            {
+                ClientKey = ClientKey,
+                BodyBase64 = base64
+            };
+
+            if (!api.CreateTask())
+            {
+                MessageBox.Show(api.ErrorMessage, "Error");
+            }
+            else if (!api.WaitForResult())
+            {
+                MessageBox.Show("Could not solve the captcha.", "Error");
+                //  DebugHelper.Out("Could not solve the captcha.", DebugHelper.Type.Error);
+            }
+            else
+            {
+                captcha = api.GetTaskSolution().Text;
+                // DebugHelper.Out("Result: " + api.GetTaskSolution().Text, DebugHelper.Type.Success);
+            }
+            return captcha;
         }
     }
 

@@ -67,7 +67,7 @@ namespace FrankingPay.BL.ViewModel
                 return true;
             }
             catch (Exception ex) {
-                return false;
+                throw ex;
             }
             
         }
