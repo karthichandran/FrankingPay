@@ -13,11 +13,19 @@ using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Anticaptcha_example.Api;
+using System.Threading;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace FrankingPay.Core.Selenium
 {
    public class ArticlePaymentProcess:Base
     {
+       
+        public ArticlePaymentProcess() {
+          
+        }
         static BankAccountDetailsDto _bankLogin;
         
         private static string GeneratePDF(IWebDriver webdriver, string downloadPath, string fileName)
@@ -364,7 +372,7 @@ namespace FrankingPay.Core.Selenium
             _bankLogin = new BankAccountDetailsDto
             {
                 UserName = "582266194.RGANESH",
-                UserPassword = "Rajalara@321"
+                UserPassword = "Rajalara@456"
             };
 
             //_bankLogin = new BankAccountDetailsDto
@@ -377,14 +385,22 @@ namespace FrankingPay.Core.Selenium
             //    UserName = "579091011.VIJAYALA",
             //    UserPassword = "Sriram@123"
             //};
+
+            // for hdfc
+            //_bankLogin = new BankAccountDetailsDto
+            //{
+            //    UserName = "218712211",
+            //    UserPassword = "Rajalara@321"
+            //};
             var webDriver = GetChromeDriver();
             try
             {
-
+              
                 FeedStaticData(model, isArticle5E);
                 string remark = (isArticle5E) ? frankingID + "_Article_5E" : frankingID + "_Article_22";
                 var challan = FillArticle5E(webDriver, model);
-                ProcessToBank(webDriver, remark);
+                 ProcessToBank(webDriver, remark);
+              //  ProcessToBank_hdfc(webDriver);
 
                 //var challan = "CR0721003000526885";
                 //NavigateToPrint(webDriver, challan);
@@ -457,7 +473,7 @@ namespace FrankingPay.Core.Selenium
             try
             {
                 webDriver.Navigate().GoToUrl("https://k2.karnataka.gov.in/wps/portal/Khajane-II/Scope/Remittance/ChallanGeneration/");
-                WaitFor(webDriver, 3);
+                WaitFor(webDriver, 3);              
 
                 var curHandle = webDriver.CurrentWindowHandle;
                 var tot = webDriver.WindowHandles.Count;
@@ -533,6 +549,15 @@ namespace FrankingPay.Core.Selenium
                 mopDDl.SelectByText(model.ModeOfPayment);
                 WaitFor(webDriver, 5);
 
+                var panDdlElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:selectonePanTan"));
+                var panDDl = new SelectElement(panDdlElm);
+                panDDl.SelectByText("PAN Number");
+                WaitFor(webDriver, 3);
+
+                var panElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:pancard"));
+                panElm.SendKeys(model.PanTan);
+                WaitFor(webDriver, 2);            
+
                 var ePayElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:gtwyorbankTyp"));
                 var ePayDDl = new SelectElement(ePayElm);
                 ePayDDl.SelectByText(model.TypeOf_e_payment);
@@ -595,7 +620,7 @@ namespace FrankingPay.Core.Selenium
                 confirmElm.Click();
                 WaitFor(webDriver, 2);
 
-                //
+                ////*[@id="viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanConfirm"]/fieldset/table/tbody/tr[2]/td/p/b
                 var challanNoTxt = webDriver.FindElement(By.XPath("//*[@id='viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanConfirm']/fieldset/table/tbody/tr[2]/td/p/b")).Text;
                 var challanno = challanNoTxt.Replace("\r\n", " ").Split(':')[1].Trim().Split(' ')[0];
                 //Click Confirm button
@@ -678,6 +703,145 @@ namespace FrankingPay.Core.Selenium
                 throw new Exception("bank process Failed.");
             }
         }
+        private static void ProcessToBank_hdfc(IWebDriver webDriver)
+        {
+            
+            if (_bankLogin == null)
+            {
+                var result = MessageBox.Show("Bank login details not available", "Confirmation",
+                                                         MessageBoxButton.OK, MessageBoxImage.Asterisk,
+                                                         MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                return;
+            }
+            WaitFor(webDriver, 3);
+
+            ////corp bank
+
+            var retBank = webDriver.FindElement(By.Id("rib"));
+            retBank.Click();
+            //Pay btn
+            var reqBtn = webDriver.FindElement(By.Id("reqBtn"));
+            reqBtn.Click();
+
+            var frame = webDriver.FindElements(By.Name("bottom_frame"))[0];
+            webDriver.SwitchTo().Frame(frame);
+
+            var userName = webDriver.FindElement(By.Name("fldLoginUserId"));
+            userName.SendKeys(_bankLogin.UserName);
+
+            var continueBtn = webDriver.FindElements(By.XPath("//a[contains(.,'CONTINUE')]"))[0];
+            continueBtn.Click();
+            // WaitForReady(webDriver);
+            WaitFor(webDriver, 3);
+
+            frame = webDriver.FindElement(By.Name("bottom_frame"));
+            webDriver.SwitchTo().Frame(frame);
+
+            var pwdTxt = webDriver.FindElement(By.Id("fldPasswordDispId"));
+            pwdTxt.SendKeys(_bankLogin.UserPassword);
+
+            var loginBtn = webDriver.FindElement(By.ClassName("login-btn"));
+            loginBtn.Click();
+            WaitFor(webDriver, 3);
+
+
+            var confirmBtn = webDriver.FindElement(By.XPath("//img[@src='gif/confirm.png']"));
+            confirmBtn.Click();
+            // WaitForReady(webDriver);           
+
+            string otp = "";
+            for (var i = 0; i < 120; i++)
+            {
+                var msg = GetOTP();
+                if (msg == null)
+                {
+                    Thread.Sleep(2000);
+                    continue;
+                }
+
+                if (msg.Opt > 0)
+                {
+                    var txtOpt = msg.Opt.ToString();
+
+                    otp = txtOpt.Length == 6 ? txtOpt : Regex.Match(msg.Body, "(\\d{6})").Groups[0].Value; ;
+                    break;
+                }
+
+            }
+
+            //Ask OTP if not received
+            if (otp == "")
+            {
+                MessageBoxResult done = MessageBox.Show("Please fill the OTP and press OK button.", "Confirmation",
+                                                        MessageBoxButton.OK, MessageBoxImage.Asterisk,
+                                                        MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+            }
+            else
+            {
+                //fill opt
+                var optElm = webDriver.FindElement(By.Name("fldOtpToken"));
+                optElm.SendKeys(otp);
+            }
+
+            //Delete otp
+            DeleteOTP();
+
+
+            ///gif/submit.gif
+            ///
+            var submitBtn = webDriver.FindElement(By.XPath("//img[@src='/gif/submit.gif']"));
+            submitBtn.Click();
+            //WaitForReady(webDriver);
+            WaitFor(webDriver, 3);
+
+            var redirectElm = webDriver.FindElement(By.Name("click"));
+            redirectElm.Click();
+            WaitFor(webDriver, 2);
+
+            //var jsExecuter = (IJavaScriptExecutor)webDriver;
+            //jsExecuter.ExecuteScript(" var elm=document.getElementById('printChallan'); setTimeout(function(){elm.click();},100);");
+
+            //WaitFor(webDriver, 3);
+            //webDriver.SwitchTo().Window(webDriver.WindowHandles.Last());
+           
+
+            //IWebElement element = webDriver.FindElement(By.TagName("body"));
+            //element.SendKeys(Keys.Enter);   
+
+        
+
+
+        }
+
+        public static MessageDto GetOTP()
+        {
+            HttpClient reproClient = new HttpClient();
+            reproClient.BaseAddress = new Uri("http://leansyshost-001-site3.itempurl.com/api/");
+            MessageDto msg = null;
+            HttpResponseMessage response = new HttpResponseMessage();
+            response =  reproClient.GetAsync("Message/1").Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+              msg=  JsonConvert.DeserializeObject<MessageDto>( response.Content.ReadAsStringAsync().Result);
+            
+            }
+            return msg;
+        }
+
+        public static bool DeleteOTP()
+        {
+            HttpClient reproClient = new HttpClient();
+            reproClient.BaseAddress = new Uri("http://leansyshost-001-site3.itempurl.com/api/");
+            HttpResponseMessage response = new HttpResponseMessage();
+            response = reproClient.DeleteAsync("Message/1").Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
         private static void FillGridValue() { 
         
         }
@@ -695,6 +859,7 @@ namespace FrankingPay.Core.Selenium
             model.ModeOfPayment = "Netbanking";
             model.TypeOf_e_payment = "Direct Integration with Banks";
             model.Bank = "ICICI Bank";
+           // model.Bank = "HDFC Bank";
         }
         private static void ProcessGridData(IWebDriver webDriver)
         {
@@ -852,4 +1017,23 @@ namespace FrankingPay.Core.Selenium
         public string UserName { get; set; }
         public string UserPassword { get; set; }
     }
+
+    public class MessageDto
+    {
+        public int MessageID { get; set; }
+
+        public string Subject { get; set; }
+        public string Body { get; set; }
+        public bool? Verified { get; set; }
+        public int? Lane { get; set; }
+        public string Message { get; set; }
+        public int? Error_code { get; set; }
+        public int Opt { get; set; }
+    }
+
+    //public static class HttpContentExtensions
+    //{
+    //    public static async Task<T> ReadAsAsync<T>(this HttpContent content) =>
+    //        await JsonSerializer.DeserializeAsync<T>(await content.ReadAsStreamAsync());
+    //}
 }

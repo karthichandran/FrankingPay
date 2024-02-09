@@ -24,5 +24,6 @@ namespace FrankingPay.DAL.Models
         public DateTime Article22PaidDate { get; set; }
         public string BankTransactionNo5E { get; set; }
         public string BankTransactionNo22 { get; set; }
+        public string PanTan { get; set; }
     }
 }

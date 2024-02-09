@@ -21,6 +21,7 @@ namespace FrankingPay.Core.Selenium
 
         public string TypeOf_e_payment { get; set; }
         public string Bank { get; set; }
+        public string PanTan { get; set; }
         
     }
 }

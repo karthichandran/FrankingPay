@@ -27,7 +27,7 @@ namespace FrankingPay.DAL
                                   LotNo,InvoiceDocNo,FirstName,MiddleName,LastName,
                                   SaleValue,Article5Amount,Article5ChallanNo,Article5PaidDate,
                                   Article22PayAmount,Article22ChallanNo,Article22PaidDate,
-                                    BankTransactionNo5E,BankTransactionNo22
+                                    BankTransactionNo5E,BankTransactionNo22,PanTan
                              FROM dbo.FrankingStore
                             WHERE Article22ChallanNo is null
                                   OR Article5ChallanNo is null";
@@ -49,7 +49,7 @@ namespace FrankingPay.DAL
                 string sql = @"SELECT FraankingPayId,CompanyName,ProjectName,UnitNo, 
                                   LotNo,InvoiceDocNo,FirstName,MiddleName,LastName,
                                   SaleValue,Article5Amount,Article5ChallanNo,Article5PaidDate,
-                                  Article22PayAmount,Article22ChallanNo,Article22PaidDate,  BankTransactionNo5E,BankTransactionNo22
+                                  Article22PayAmount,Article22ChallanNo,Article22PaidDate,  BankTransactionNo5E,BankTransactionNo22,PanTan
                              FROM dbo.FrankingStore
                             WHERE  (@company='' or CompanyName like '%'+@company+'%')
                              and (@project='' or ProjectName like '%'+@project+'%')
@@ -88,16 +88,16 @@ and( (@name='' or FirstName like '%'+@name+'%') or (@name='' or MiddleName like 
         {
             string query = @"  INSERT INTO FrankingStore 
                  (CompanyName,ProjectName,UnitNo,LotNo,InvoiceDocNo,FirstName
-            ,MiddleName,LastName,SaleValue,Article5Amount,Article22PayAmount
+            ,MiddleName,LastName,SaleValue,Article5Amount,Article22PayAmount,PanTan
            )
             VALUES
                 ( @CompanyName, @ProjectName, @UnitNo, @LotNo, @InvoiceDocNo, @FirstName,   
-                 @MiddleName, @LastName, @SaleValue, @Article5Amount, @Article22PayAmount)";
+                 @MiddleName, @LastName, @SaleValue, @Article5Amount, @Article22PayAmount, @PanTan)";
 
             db.SaveData(query,
                         new
                            {payRecord.CompanyName, payRecord.ProjectName, payRecord.UnitNo, payRecord.LotNo, payRecord.InvoiceDocNo, payRecord.FirstName,
-                            payRecord.MiddleName, payRecord.LastName, payRecord.SaleValue, payRecord.Article5Amount, payRecord.Article22PayAmount},
+                            payRecord.MiddleName, payRecord.LastName, payRecord.SaleValue, payRecord.Article5Amount, payRecord.Article22PayAmount,payRecord.PanTan},
                         _connectionString);
         }
 

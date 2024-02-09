@@ -2,16 +2,21 @@
 using FrankingPay.DAL;
 using FrankingPay.DAL.Models;
 using System;
+using System.IO;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FrankingPay.BL.Service
 {
    public class FrankingService
     {
+      
         private SqlCrud dataService;
         public FrankingService(string connectionString) {
-            dataService = new SqlCrud(connectionString);
+            dataService = new SqlCrud(connectionString);           
         }
         public bool SaveImportedData(List<FrankingStoreModel> frankingPays) {
             try
@@ -99,7 +104,9 @@ namespace FrankingPay.BL.Service
             {
                 throw ex;
             }
-        }
+        } 
+
+      
 
         private void UpdateFrankingFromModel(FrankingStore target, FrankingStoreModel source) {
 
@@ -114,6 +121,7 @@ namespace FrankingPay.BL.Service
             target.SaleValue = source.SaleValue;
             target.Article22PayAmount = source.ArticleNo22Amount;
             target.Article5Amount = source.ArticleNo5Amount;
+            target.PanTan = source.PanTan;
         }
 
         private PaymentProcessModel CreateModelFromFrankingDataModel(FrankingStore source) {
@@ -134,7 +142,8 @@ namespace FrankingPay.BL.Service
                 ArticleNo22payment = Convert.ToDecimal(source.Article22PayAmount),
                 ArticleNo22ChallanNo = source.Article22ChallanNo,
                 BankTransactionNo5E=source.BankTransactionNo5E,
-                BankTransactionNo22=source.BankTransactionNo22
+                BankTransactionNo22=source.BankTransactionNo22,
+                PanTan=source.PanTan
             };
             return item;
         }

@@ -29,6 +29,7 @@ namespace FrankingPay.BL.Model
         private bool _isSelected;
         private string _bankTransactionNo5e;
         private string _bankTransactionNo22;
+        private string _panTan;
 
         public int FrankingId { get { return _frankingId; } set { _frankingId = value; OnPropertyChanged("FrankingId"); } }
         public string CompanyName { get { return _companyName; } set { _companyName = value; OnPropertyChanged("CompanyName"); } }
@@ -48,6 +49,7 @@ namespace FrankingPay.BL.Model
         public bool IsSelected { get { return _isSelected; } set { _isSelected = value; OnPropertyChanged("IsSelected"); } }
         public string BankTransactionNo5E { get { return _bankTransactionNo5e; } set { _bankTransactionNo5e = value; OnPropertyChanged("BankTransactionNo5E"); } }
         public string BankTransactionNo22 { get { return _bankTransactionNo22; } set { _bankTransactionNo22 = value; OnPropertyChanged("BankTransaction22"); } }
+        public string PanTan { get { return _panTan; } set { _panTan = value; OnPropertyChanged("PanTan"); } }
 
 
         #region INotifyPropertyChanged Members  

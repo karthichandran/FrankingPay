@@ -53,7 +53,7 @@ namespace FrankingPay.UI.View
                 progressbar.Visibility = Visibility.Visible;
                 var model = (sender as Button).DataContext as PaymentProcessModel;
               
-                 ViewModel.ProcessArticle5E(model, downloadPath);
+                ViewModel.ProcessArticle5E(model, downloadPath);
                 progressbar.Visibility = Visibility.Hidden;
             }
             catch (Exception ex) {

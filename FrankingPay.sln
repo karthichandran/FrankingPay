@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrankingPay.UI", "FrankingP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrankingPay.BL", "FrankingPay.BL\FrankingPay.BL.csproj", "{DFF147F0-E928-4118-AD9B-EE0F15DF4D62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrankingPay.Core", "FrankingPay.Core\FrankingPay.Core.csproj", "{374C712B-D439-4436-B840-AD076C1269DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrankingPay.Core", "FrankingPay.Core\FrankingPay.Core.csproj", "{374C712B-D439-4436-B840-AD076C1269DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrankingPay.DAL", "FrankingPay.DAL\FrankingPay.DAL.csproj", "{38657FE9-B9DC-436D-9EEC-5EB15E09AF9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrankingPay.DAL", "FrankingPay.DAL\FrankingPay.DAL.csproj", "{38657FE9-B9DC-436D-9EEC-5EB15E09AF9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

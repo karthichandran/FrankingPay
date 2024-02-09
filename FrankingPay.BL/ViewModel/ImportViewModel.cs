@@ -112,7 +112,8 @@ namespace FrankingPay.BL.ViewModel
                         InvoiceDocNo = Convert.ToInt64(row[5].ToString()),
                         SaleValue = Convert.ToDecimal(row[7].ToString()),
                         ArticleNo5Amount= Convert.ToDecimal(row[8].ToString()),
-                        ArticleNo22Amount = Convert.ToDecimal(row[9].ToString())
+                        ArticleNo22Amount = Convert.ToDecimal(row[9].ToString()),
+                        PanTan = row[10].ToString()
                     }) ;
                     inx++;
                 }
