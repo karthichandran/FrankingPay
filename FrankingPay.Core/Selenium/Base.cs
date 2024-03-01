@@ -55,7 +55,7 @@ namespace FrankingPay.Core.Selenium
 
         protected static void WaitForElementReady(IWebDriver webDriver, string elemID)
         {
-            TimeSpan timeSpan = TimeSpan.FromSeconds(60);
+            TimeSpan timeSpan = TimeSpan.FromSeconds(90);
             WebDriverWait wait = new WebDriverWait(webDriver, timeSpan);
             wait.Until(driver => {
 

@@ -144,7 +144,8 @@ namespace FrankingPay.BL.ViewModel
                         FirstName = item.FirstName,
                         MiddleName = item.MiddleName,
                         LastName = item.LastName,
-                        Amount = Convert.ToInt32(item.ArticleNo5payment).ToString()
+                        Amount = Convert.ToInt32(item.ArticleNo5payment).ToString(),
+                        PanTan = item.PanTan
                     };
                     //Articel 5E
                    

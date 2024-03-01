@@ -371,7 +371,9 @@ namespace FrankingPay.Core.Selenium
         {
             _bankLogin = new BankAccountDetailsDto
             {
-                UserName = "582266194.RGANESH",
+                //UserName = "582266194.RGANESH",
+                //UserPassword = "Rajalara@456"
+                UserName = "VidyaBIZ1Ganesh",
                 UserPassword = "Rajalara@456"
             };
 
@@ -400,6 +402,7 @@ namespace FrankingPay.Core.Selenium
                 string remark = (isArticle5E) ? frankingID + "_Article_5E" : frankingID + "_Article_22";
                 var challan = FillArticle5E(webDriver, model);
                  ProcessToBank(webDriver, remark);
+
               //  ProcessToBank_hdfc(webDriver);
 
                 //var challan = "CR0721003000526885";
@@ -549,14 +552,19 @@ namespace FrankingPay.Core.Selenium
                 mopDDl.SelectByText(model.ModeOfPayment);
                 WaitFor(webDriver, 5);
 
-                var panDdlElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:selectonePanTan"));
-                var panDDl = new SelectElement(panDdlElm);
-                panDDl.SelectByText("PAN Number");
-                WaitFor(webDriver, 3);
+                var amt = Convert.ToDecimal(model.Amount);
+                if (amt >= 50000 && model.SubPurpose== "12317")
+                {
+                    var panDdlElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:selectonePanTan"));
+                    var panDDl = new SelectElement(panDdlElm);
+                    panDDl.SelectByText("PAN Number");
+                    WaitFor(webDriver, 3);
 
-                var panElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:pancard"));
-                panElm.SendKeys(model.PanTan);
-                WaitFor(webDriver, 2);            
+                    WaitForElementReady(webDriver, "viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:pancard");                   
+                    var panElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:pancard"));
+                    panElm.SendKeys(model.PanTan);
+                    WaitFor(webDriver, 2);
+                }
 
                 var ePayElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:gtwyorbankTyp"));
                 var ePayDDl = new SelectElement(ePayElm);
