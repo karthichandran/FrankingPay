@@ -374,7 +374,7 @@ namespace FrankingPay.Core.Selenium
                 //UserName = "582266194.RGANESH",
                 //UserPassword = "Rajalara@456"
                 UserName = "VidyaBIZ1Ganesh",
-                UserPassword = "Rajalara@456"
+                UserPassword = "Bizservices@123"
             };
 
             //_bankLogin = new BankAccountDetailsDto
