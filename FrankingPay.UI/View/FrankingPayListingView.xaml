@@ -35,6 +35,10 @@
                     <TextBlock Text="Name ( First | Middle | Last)" Margin="0 20 0 10" FontSize="14" FontWeight="Medium" Foreground="#9E9E9E"/>
                     <TextBox x:Name="nameTxt" MinWidth="150" Height="30" BorderBrush="#E0E0E0"/>
                 </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10 0 10 0">
+                    <TextBlock Text="Prestige Trans ID" Margin="0 20 0 10" FontSize="14" FontWeight="Medium" Foreground="#9E9E9E"/>
+                    <TextBox x:Name="TransID" MinWidth="150" Height="30" BorderBrush="#E0E0E0"/>
+                </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="SearchBtn"  Width="150" Height="35" Margin=" 5 30 5 0" Padding="20 0 20 0"   Background="#29B6F6" BorderBrush="#29B6F6" Click="SearchBtn_Click">
@@ -103,7 +107,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Trans ID" Binding="{Binding FrankingId}">
+                    <DataGridTextColumn Header="Prestige Trans ID" Binding="{Binding TransactionId}">
                         <DataGridColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Height" Value="40"/>
@@ -352,6 +356,22 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTextColumn Header="Challan PDF file name" Binding="{Binding Article5Filename}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Height" Value="40"/>
+                                <Setter Property="FontSize" Value="16"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="#828385"/>
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="10,0,0,0" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Article No 22" Binding="{Binding  ArticleNo22payment}">
                         <DataGridColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
@@ -408,6 +428,22 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>-->
                     <DataGridTextColumn Header="Transaction No 22" Binding="{Binding BankTransactionNo22}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Height" Value="40"/>
+                                <Setter Property="FontSize" Value="16"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Foreground" Value="#828385"/>
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="10,0,0,0" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Challan PDF file name" Binding="{Binding Article22Filename}">
                         <DataGridColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Height" Value="40"/>

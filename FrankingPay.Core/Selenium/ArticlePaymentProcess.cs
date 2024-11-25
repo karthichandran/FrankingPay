@@ -367,15 +367,19 @@ namespace FrankingPay.Core.Selenium
         //    }
         //}
 
-        public static Dictionary<string, string> ProcessArticle(ArticleFeedModel model, bool isArticle5E, string downloadPath, string fileName,int frankingID)
+        public static Dictionary<string, string> ProcessArticle(ArticleFeedModel model, bool isArticle5E, string downloadPath, string fileName,string transactionId)
         {
             _bankLogin = new BankAccountDetailsDto
             {
-                //UserName = "582266194.RGANESH",
-                //UserPassword = "Rajalara@456"
                 UserName = "VidyaBIZ1Ganesh",
-                UserPassword = "Rajalara@456"
+                UserPassword = "Bizservices1@123"
             };
+
+            //_bankLogin = new BankAccountDetailsDto
+            //{
+            //    UserName = "VidyaBIZ2Ganesh",
+            //    UserPassword = "Bizservices2@123"
+            //};
 
             //_bankLogin = new BankAccountDetailsDto
             //{
@@ -399,7 +403,7 @@ namespace FrankingPay.Core.Selenium
             {
               
                 FeedStaticData(model, isArticle5E);
-                string remark = (isArticle5E) ? frankingID + "_Article_5E" : frankingID + "_Article_22";
+                string remark = (isArticle5E) ? transactionId + "_Article_5E" : transactionId + "_Article_22";
                 var challan = FillArticle5E(webDriver, model);
                  ProcessToBank(webDriver, remark);
 
@@ -416,6 +420,7 @@ namespace FrankingPay.Core.Selenium
                 Dictionary<string, string> challanDet = new Dictionary<string, string>();
                 challanDet.Add("challan", challan);
                 challanDet.Add("transactionNo", transactionNo);
+                challanDet.Add("fileName", fileName+".pdf");
 
                 return challanDet;
             }
@@ -872,6 +877,25 @@ namespace FrankingPay.Core.Selenium
         private static void ProcessGridData(IWebDriver webDriver)
         {
             Dictionary<string, string> grid = new Dictionary<string, string>();
+            //VidyaBIZ2Ganesh
+            //grid.Add("A", "92");
+            //grid.Add("B", "63");
+            //grid.Add("C", "25");
+            //grid.Add("D", "45");
+            //grid.Add("E", "82");
+            //grid.Add("F", "55");
+            //grid.Add("G", "62");
+            //grid.Add("H", "47");
+            //grid.Add("I", "51");
+            //grid.Add("J", "58");
+            //grid.Add("K", "79");
+            //grid.Add("L", "45");
+            //grid.Add("M", "22");
+            //grid.Add("N", "44");
+            //grid.Add("O", "49");
+            //grid.Add("P", "73");
+
+            //VidyaBIZ1Ganesh
             //582266194.RGANESH
             grid.Add("A", "57");
             grid.Add("B", "12");

@@ -45,10 +45,10 @@ namespace FrankingPay.BL.Service
             return frankingList;
         }
 
-        public List<PaymentProcessModel> GetFrankingList(string company,string project,string lotNo,string unitNo,string name)
+        public List<PaymentProcessModel> GetFrankingList(string company,string project,string lotNo,string unitNo,string name,string transId)
         {
             List<PaymentProcessModel> frankingList = new List<PaymentProcessModel>();
-            var list = dataService.GetPendingFrankingPayments(company, project, lotNo, unitNo, name);
+            var list = dataService.GetPendingFrankingPayments(company, project, lotNo, unitNo, name, transId);
             foreach (var item in list.PendingFrankingPaymentsList)
             {
                 frankingList.Add(CreateModelFromFrankingDataModel(item));
@@ -56,9 +56,9 @@ namespace FrankingPay.BL.Service
             return frankingList;
         }
 
-        public bool UpdateArticle5eChallanNo(int frankingId, string challanNo,string transactionNo) {
+        public bool UpdateArticle5eChallanNo(int frankingId, string challanNo,string transactionNo,string fileName) {
             try {                 
-                dataService.UpdateChallan5E(frankingId, challanNo, transactionNo);
+                dataService.UpdateChallan5E(frankingId, challanNo, transactionNo, fileName);
                 return true;
             }
             catch (Exception ex)
@@ -71,7 +71,7 @@ namespace FrankingPay.BL.Service
         {
             try
             {
-                dataService.UpdateChallan5E(frankingId, challanNo, transactionNo);
+                //dataService.UpdateChallan5E(frankingId, challanNo, transactionNo);
                 return true;
             }
             catch (Exception ex)
@@ -80,11 +80,11 @@ namespace FrankingPay.BL.Service
             }
         }
 
-        public bool UpdateArticle22ChallanNo(int frankingId, string challanNo, string transactionNo)
+        public bool UpdateArticle22ChallanNo(int frankingId, string challanNo, string transactionNo, string fileName)
         {
             try
             {
-                dataService.UpdateChallan22(frankingId, challanNo, transactionNo);
+                dataService.UpdateChallan22(frankingId, challanNo, transactionNo, fileName);
                 return true;
             }
             catch (Exception ex)
@@ -122,6 +122,7 @@ namespace FrankingPay.BL.Service
             target.Article22PayAmount = source.ArticleNo22Amount;
             target.Article5Amount = source.ArticleNo5Amount;
             target.PanTan = source.PanTan;
+            target.TransactionId = source.TransactionId;
         }
 
         private PaymentProcessModel CreateModelFromFrankingDataModel(FrankingStore source) {
@@ -143,7 +144,10 @@ namespace FrankingPay.BL.Service
                 ArticleNo22ChallanNo = source.Article22ChallanNo,
                 BankTransactionNo5E=source.BankTransactionNo5E,
                 BankTransactionNo22=source.BankTransactionNo22,
-                PanTan=source.PanTan
+                PanTan=source.PanTan,
+                TransactionId = source.TransactionId,
+                Article5Filename = source.Article5Filename,
+                Article22Filename = source.Article22Filename
             };
             return item;
         }

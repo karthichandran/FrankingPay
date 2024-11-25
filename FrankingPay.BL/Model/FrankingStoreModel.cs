@@ -28,6 +28,7 @@ namespace FrankingPay.BL.Model
         private string _bankTransactionNo5e;
         private string _bankTransactionNo22;
         private string _pantan;
+        private string _transactionId;
 
         public int Index { get { return _index; } set { _index = value; OnPropertyChanged("Index"); } }
         public int FrankingId { get { return _frankingId; } set { _frankingId = value; OnPropertyChanged("FrankingId"); } }
@@ -48,6 +49,7 @@ namespace FrankingPay.BL.Model
         public string BankTransactionNo5E { get { return _bankTransactionNo5e; } set { _bankTransactionNo5e = value; OnPropertyChanged("BankTransactionNo5E"); } }
         public string BankTransactionNo22 { get { return _bankTransactionNo22; } set { _bankTransactionNo22 = value; OnPropertyChanged("BankTransaction22"); } }
         public string PanTan { get { return _pantan; } set { _pantan = value; OnPropertyChanged("PanTan"); } }
+        public string TransactionId { get { return _transactionId; } set { _transactionId = value; OnPropertyChanged("TransactionId"); } }
 
         #region INotifyPropertyChanged Members  
 

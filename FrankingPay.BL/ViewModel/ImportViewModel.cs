@@ -80,7 +80,7 @@ namespace FrankingPay.BL.ViewModel
                 foreach (DataRow row in dt.Rows)
                 {
 
-                    var allotte = row[6].ToString().Trim();
+                    var allotte = row[7].ToString().Trim();
                     allotte= Regex.Replace(allotte, "[^a-zA-Z0-9]+", " ", RegexOptions.Compiled);
                     var name = allotte.Split(' ');
                     string firstName="", middleName="", lastName="";
@@ -102,18 +102,19 @@ namespace FrankingPay.BL.ViewModel
                   
                     models.Add(new FrankingStoreModel
                     {Index=inx,
-                        CompanyName = row[1].ToString(),
-                        ProjectName = row[2].ToString(),
+                        TransactionId = row[1].ToString(),
+                        CompanyName = row[2].ToString(),
+                        ProjectName = row[3].ToString(),
                         FirstName = firstName,
                         MiddleName = middleName,
                         LastName =lastName,
-                        UnitNo = Convert.ToInt32(row[3].ToString()),
-                        LotNo = Convert.ToInt32(row[4].ToString()),
-                        InvoiceDocNo = Convert.ToInt64(row[5].ToString()),
-                        SaleValue = Convert.ToDecimal(row[7].ToString()),
-                        ArticleNo5Amount= Convert.ToDecimal(row[8].ToString()),
-                        ArticleNo22Amount = Convert.ToDecimal(row[9].ToString()),
-                        PanTan = row[10].ToString()
+                        UnitNo = Convert.ToInt32(row[4].ToString()),
+                        LotNo = Convert.ToInt32(row[5].ToString()),
+                        InvoiceDocNo = Convert.ToInt64(row[6].ToString()),
+                        SaleValue = Convert.ToDecimal(row[8].ToString()),
+                        ArticleNo5Amount= Convert.ToDecimal(row[9].ToString()),
+                        ArticleNo22Amount = Convert.ToDecimal(row[10].ToString()),
+                        PanTan = row[11].ToString()
                     }) ;
                     inx++;
                 }

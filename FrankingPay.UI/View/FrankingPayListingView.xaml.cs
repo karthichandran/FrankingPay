@@ -38,7 +38,7 @@ namespace FrankingPay.UI.View
             try
             {
                 progressbar.Visibility = Visibility.Visible;
-                ViewModel.GetFrankingProcessList(companyTxt.Text,projectTxt.Text,lotTxt.Text,unitTxt.Text,nameTxt.Text);
+                ViewModel.GetFrankingProcessList(companyTxt.Text,projectTxt.Text,lotTxt.Text,unitTxt.Text,nameTxt.Text,TransID.Text);
                 progressbar.Visibility = Visibility.Hidden;
             }
             catch (Exception ex) {

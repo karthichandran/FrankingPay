@@ -41,7 +41,7 @@ namespace FrankingPay.DAL
             return payments;
         }
 
-        public FrankingPayments GetPendingFrankingPayments(string company,string project,string lotNo,string unitNo,string name)
+        public FrankingPayments GetPendingFrankingPayments(string company,string project,string lotNo,string unitNo,string name,string transId)
         {
             try
             {
@@ -49,13 +49,14 @@ namespace FrankingPay.DAL
                 string sql = @"SELECT FraankingPayId,CompanyName,ProjectName,UnitNo, 
                                   LotNo,InvoiceDocNo,FirstName,MiddleName,LastName,
                                   SaleValue,Article5Amount,Article5ChallanNo,Article5PaidDate,
-                                  Article22PayAmount,Article22ChallanNo,Article22PaidDate,  BankTransactionNo5E,BankTransactionNo22,PanTan
+                                  Article22PayAmount,Article22ChallanNo,Article22PaidDate,  BankTransactionNo5E,BankTransactionNo22,PanTan,TransactionId,Article5Filename,Article22Filename 
                              FROM dbo.FrankingStore
                             WHERE  (@company='' or CompanyName like '%'+@company+'%')
+                             and  (@transId='' or TransactionId like '%'+@transId+'%')
                              and (@project='' or ProjectName like '%'+@project+'%')
 and (@lotNo='' or LotNo =@lotNo) and (@unitNo='' or UnitNo like '%'+@unitNo+'%') 
 and( (@name='' or FirstName like '%'+@name+'%') or (@name='' or MiddleName like '%'+@name+'%') or (@name='' or LastName like '%'+@name+'%'))";
-                payments.PendingFrankingPaymentsList = db.LoadData<FrankingStore, dynamic>(sql, new { company, project, lotNo, unitNo, name }, _connectionString);
+                payments.PendingFrankingPaymentsList = db.LoadData<FrankingStore, dynamic>(sql, new { company, project, lotNo, unitNo, name , transId }, _connectionString);
 
                 string partnerSql = @"SELECT PartnerId, PartnerName, PartnerAddress, DdoCategory, DdoDistrict,
                                          DdoDepartment, DdoOffice, Purpose, Article5Subpurpose, Article22Subpurpose
@@ -88,26 +89,26 @@ and( (@name='' or FirstName like '%'+@name+'%') or (@name='' or MiddleName like 
         {
             string query = @"  INSERT INTO FrankingStore 
                  (CompanyName,ProjectName,UnitNo,LotNo,InvoiceDocNo,FirstName
-            ,MiddleName,LastName,SaleValue,Article5Amount,Article22PayAmount,PanTan
+            ,MiddleName,LastName,SaleValue,Article5Amount,Article22PayAmount,PanTan,TransactionId 
            )
             VALUES
                 ( @CompanyName, @ProjectName, @UnitNo, @LotNo, @InvoiceDocNo, @FirstName,   
-                 @MiddleName, @LastName, @SaleValue, @Article5Amount, @Article22PayAmount, @PanTan)";
+                 @MiddleName, @LastName, @SaleValue, @Article5Amount, @Article22PayAmount, @PanTan,@TransactionId)";
 
             db.SaveData(query,
                         new
                            {payRecord.CompanyName, payRecord.ProjectName, payRecord.UnitNo, payRecord.LotNo, payRecord.InvoiceDocNo, payRecord.FirstName,
-                            payRecord.MiddleName, payRecord.LastName, payRecord.SaleValue, payRecord.Article5Amount, payRecord.Article22PayAmount,payRecord.PanTan},
+                            payRecord.MiddleName, payRecord.LastName, payRecord.SaleValue, payRecord.Article5Amount, payRecord.Article22PayAmount,payRecord.PanTan,payRecord.TransactionId},
                         _connectionString);
         }
 
-        public bool UpdateChallan5E(int frankingId, string challanNo,string transactionNo)
+        public bool UpdateChallan5E(int frankingId, string challanNo,string transactionNo,string fileName)
         {
             try
             {
                 var paidDate = DateTime.Now;
-                string query = @"  update FrankingStore set Article5ChallanNo =@challanNo,BankTransactionNo5E=@transactionNo ,Article5PaidDate=@paidDate where fraankingPayId=@frankingId ";
-                db.SaveData(query, new { frankingId, challanNo , transactionNo,paidDate }, _connectionString);
+                string query = @"  update FrankingStore set Article5ChallanNo =@challanNo,BankTransactionNo5E=@transactionNo ,Article5PaidDate=@paidDate,Article5Filename=@fileName where fraankingPayId=@frankingId ";
+                db.SaveData(query, new { frankingId, challanNo , transactionNo,paidDate, fileName }, _connectionString);
                 return true;
             }
             catch (Exception ex)
@@ -116,13 +117,13 @@ and( (@name='' or FirstName like '%'+@name+'%') or (@name='' or MiddleName like 
             }           
         }
 
-        public bool UpdateChallan22(int frankingId, string challanNo, string transactionNo)
+        public bool UpdateChallan22(int frankingId, string challanNo, string transactionNo, string fileName)
         {
             try
             {
                 var paidDate = DateTime.Now;
-                string query = @"  update FrankingStore set Article22ChallanNo =@challanNo,BankTransactionNo22=@transactionNo  ,Article22PaidDate=@paidDate where fraankingPayId=@frankingId ";
-                db.SaveData(query, new { frankingId, challanNo, transactionNo, paidDate }, _connectionString);
+                string query = @"  update FrankingStore set Article22ChallanNo =@challanNo,BankTransactionNo22=@transactionNo  ,Article22PaidDate=@paidDate ,Article22Filename=@fileName where fraankingPayId=@frankingId ";
+                db.SaveData(query, new { frankingId, challanNo, transactionNo, paidDate, fileName }, _connectionString);
                 return true;
             }
             catch (Exception ex)

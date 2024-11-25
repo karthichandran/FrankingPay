@@ -13,7 +13,7 @@
     <PackageReference Include="PdfPig" Version="0.1.4" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="121.0.6167.8500" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="129.0.6668.8900" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
     <PackageReference Include="WeihanLi.Npoi" Version="1.18.0" />
   </ItemGroup>

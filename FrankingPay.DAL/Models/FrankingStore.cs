@@ -25,5 +25,8 @@ namespace FrankingPay.DAL.Models
         public string BankTransactionNo5E { get; set; }
         public string BankTransactionNo22 { get; set; }
         public string PanTan { get; set; }
+        public string TransactionId { get; set; }
+        public string Article5Filename { get; set; }
+        public string Article22Filename { get; set; }
     }
 }

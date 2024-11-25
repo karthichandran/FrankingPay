@@ -33,9 +33,9 @@ namespace FrankingPay.BL.ViewModel
         }  
        
 
-        public bool GetFrankingProcessList(string companyName="",string projectName="",string lotNo="",string unitNo="",string name="")
+        public bool GetFrankingProcessList(string companyName="",string projectName="",string lotNo="",string unitNo="",string name="",string transId="")
         {
-            FrankingProcessList =new  ObservableCollection<PaymentProcessModel>( frankingService.GetFrankingList(companyName, projectName, lotNo, unitNo, name));
+            FrankingProcessList =new  ObservableCollection<PaymentProcessModel>( frankingService.GetFrankingList(companyName, projectName, lotNo, unitNo, name, transId));
             TotalRecords = FrankingProcessList.Count;
             return true;
         }
@@ -65,8 +65,8 @@ namespace FrankingPay.BL.ViewModel
 
             Dictionary<string, string> challanDet = new Dictionary<string, string>();
             var fileName = model.ProjectName + "_" + model.UnitNo + "_5E";
-            challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel,true, downloadFolder, fileName, model.FrankingId);
-            frankingService.UpdateArticle5eChallanNo(model.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString());
+            challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel,true, downloadFolder, fileName, model.TransactionId);
+            frankingService.UpdateArticle5eChallanNo(model.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString(), challanDet["fileName"].ToString());
             GetFrankingProcessList();
         }
 
@@ -85,8 +85,8 @@ namespace FrankingPay.BL.ViewModel
 
             Dictionary<string, string> challanDet = new Dictionary<string, string>();
             var fileName = model.ProjectName + "_" + model.UnitNo + "_22";
-            challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName,model.FrankingId);
-            frankingService.UpdateArticle22ChallanNo(model.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString());
+            challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName,model.TransactionId);
+            frankingService.UpdateArticle22ChallanNo(model.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString(), challanDet["fileName"].ToString());
             GetFrankingProcessList();
         }
 
@@ -157,8 +157,8 @@ namespace FrankingPay.BL.ViewModel
                     for (var i = 0; i < 2; i++) {
                         try
                         {
-                        challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel, true, downloadFolder, fileName, item.FrankingId);
-                        frankingService.UpdateArticle5eChallanNo(item.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString());
+                        challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel, true, downloadFolder, fileName, item.TransactionId);
+                        frankingService.UpdateArticle5eChallanNo(item.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString(),challanDet["fileName"].ToString());
                         break;
                         }
                         catch (Exception ex) { }
@@ -176,8 +176,8 @@ namespace FrankingPay.BL.ViewModel
                 fileName = item.ProjectName + "_" + item.UnitNo + "_22";
                     for (var i = 0; i < 2; i++) {
                         try {
-                        challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName, item.FrankingId);
-                        frankingService.UpdateArticle22ChallanNo(item.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString());
+                        challanDet = ArticlePaymentProcess.ProcessArticle(articlefeedModel, false, downloadFolder, fileName, item.TransactionId);
+                        frankingService.UpdateArticle22ChallanNo(item.FrankingId, challanDet["challan"].ToString(), challanDet["transactionNo"].ToString(), challanDet["fileName"].ToString());
                         break;
                         }
                         catch(Exception ex)
@@ -262,9 +262,12 @@ namespace FrankingPay.BL.ViewModel
                 settings.HasAuthor("Franking Payment");
                 settings.HasFreezePane(0, 1);
                 settings.HasSheetConfiguration(0, "sheet 1", 1, true);
-                settings.Property(_ => _.FrankingId)
-                .HasColumnTitle("Trans ID")
-                .HasColumnIndex(0);
+                //settings.Property(_ => _.FrankingId)
+                //.HasColumnTitle("Trans ID")
+                //.HasColumnIndex(0);
+                settings.Property(_ => _.TransactionId)
+                    .HasColumnTitle("Prestige Trans ID")
+                    .HasColumnIndex(0);
 
                 settings.Property(_ => _.CompanyName)
                     .HasColumnTitle("Company Name")
@@ -314,22 +317,30 @@ namespace FrankingPay.BL.ViewModel
                  .HasColumnTitle("Transaction No 5E")
                  .HasColumnIndex(12);
 
+                settings.Property(_ => _.Article5Filename)
+                    .HasColumnTitle("Challan PDF File name")
+                    .HasColumnIndex(13);
+
                 settings.Property(_ => _.ArticleNo22payment)
                   .HasColumnTitle("Article 22 payment")
-                  .HasColumnIndex(13);
+                  .HasColumnIndex(14);
 
                 settings.Property(_ => _.ArticleNo22ChallanNo)
                  .HasColumnTitle("Article 22 Challan")
-                 .HasColumnIndex(14);
+                 .HasColumnIndex(15);
 
                 settings.Property(_ => _.BankTransactionNo22)
                 .HasColumnTitle("Transaction No 22")
-                .HasColumnIndex(15);
+                .HasColumnIndex(16);
 
+                settings.Property(_ => _.Article22Filename)
+                    .HasColumnTitle("Challan PDF File name")
+                    .HasColumnIndex(17);
 
                 settings.Property(_ => _.IsSelected).Ignored();
                 settings.Property(_ => _.Updated).Ignored();
                 settings.Property(_ => _.IsSelected).Ignored();
+                settings.Property(_ => _.FrankingId).Ignored();
 
                 var ms = FrankingProcessList.ToExcelBytes();
 
