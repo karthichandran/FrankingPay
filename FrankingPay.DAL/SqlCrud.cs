@@ -27,7 +27,7 @@ namespace FrankingPay.DAL
                                   LotNo,InvoiceDocNo,FirstName,MiddleName,LastName,
                                   SaleValue,Article5Amount,Article5ChallanNo,Article5PaidDate,
                                   Article22PayAmount,Article22ChallanNo,Article22PaidDate,
-                                    BankTransactionNo5E,BankTransactionNo22,PanTan
+                                    BankTransactionNo5E,BankTransactionNo22,PanTan,MobileNo 
                              FROM dbo.FrankingStore
                             WHERE Article22ChallanNo is null
                                   OR Article5ChallanNo is null";
@@ -49,7 +49,7 @@ namespace FrankingPay.DAL
                 string sql = @"SELECT FraankingPayId,CompanyName,ProjectName,UnitNo, 
                                   LotNo,InvoiceDocNo,FirstName,MiddleName,LastName,
                                   SaleValue,Article5Amount,Article5ChallanNo,Article5PaidDate,
-                                  Article22PayAmount,Article22ChallanNo,Article22PaidDate,  BankTransactionNo5E,BankTransactionNo22,PanTan,TransactionId,Article5Filename,Article22Filename 
+                                  Article22PayAmount,Article22ChallanNo,Article22PaidDate,  BankTransactionNo5E,BankTransactionNo22,PanTan,TransactionId,Article5Filename,Article22Filename,MobileNo 
                              FROM dbo.FrankingStore
                             WHERE  (@company='' or CompanyName like '%'+@company+'%')
                              and  (@transId='' or TransactionId like '%'+@transId+'%')
@@ -89,16 +89,16 @@ and( (@name='' or FirstName like '%'+@name+'%') or (@name='' or MiddleName like 
         {
             string query = @"  INSERT INTO FrankingStore 
                  (CompanyName,ProjectName,UnitNo,LotNo,InvoiceDocNo,FirstName
-            ,MiddleName,LastName,SaleValue,Article5Amount,Article22PayAmount,PanTan,TransactionId 
+            ,MiddleName,LastName,SaleValue,Article5Amount,Article22PayAmount,PanTan,TransactionId ,MobileNo
            )
             VALUES
                 ( @CompanyName, @ProjectName, @UnitNo, @LotNo, @InvoiceDocNo, @FirstName,   
-                 @MiddleName, @LastName, @SaleValue, @Article5Amount, @Article22PayAmount, @PanTan,@TransactionId)";
+                 @MiddleName, @LastName, @SaleValue, @Article5Amount, @Article22PayAmount, @PanTan,@TransactionId,@MobileNo)";
 
             db.SaveData(query,
                         new
                            {payRecord.CompanyName, payRecord.ProjectName, payRecord.UnitNo, payRecord.LotNo, payRecord.InvoiceDocNo, payRecord.FirstName,
-                            payRecord.MiddleName, payRecord.LastName, payRecord.SaleValue, payRecord.Article5Amount, payRecord.Article22PayAmount,payRecord.PanTan,payRecord.TransactionId},
+                            payRecord.MiddleName, payRecord.LastName, payRecord.SaleValue, payRecord.Article5Amount, payRecord.Article22PayAmount,payRecord.PanTan,payRecord.TransactionId,payRecord.MobileNo},
                         _connectionString);
         }
 

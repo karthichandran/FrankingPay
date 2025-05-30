@@ -56,7 +56,8 @@ namespace FrankingPay.BL.ViewModel
                 MiddleName = model.MiddleName,
                 LastName = model.LastName,
                 Amount =Convert.ToInt32( model.ArticleNo5payment).ToString(),
-                PanTan=model.PanTan
+                PanTan=model.PanTan,
+                MobileNo = model.MobileNo
             };
 
             var downloadFolder = downloadPath + @"\" + model.LotNo;
@@ -77,7 +78,8 @@ namespace FrankingPay.BL.ViewModel
                 FirstName = model.FirstName,
                 MiddleName = model.MiddleName,
                 LastName = model.LastName,
-                Amount = Convert.ToInt32(model.ArticleNo22payment).ToString()
+                Amount = Convert.ToInt32(model.ArticleNo22payment).ToString(),
+                MobileNo = model.MobileNo
             };
             var downloadFolder = downloadPath + @"\" + model.LotNo;
             if (!Directory.Exists(downloadFolder))
@@ -145,7 +147,8 @@ namespace FrankingPay.BL.ViewModel
                         MiddleName = item.MiddleName,
                         LastName = item.LastName,
                         Amount = Convert.ToInt32(item.ArticleNo5payment).ToString(),
-                        PanTan = item.PanTan
+                        PanTan = item.PanTan,
+                        MobileNo = item.MobileNo
                     };
                     //Articel 5E
                    
@@ -169,7 +172,8 @@ namespace FrankingPay.BL.ViewModel
                         FirstName = item.FirstName,
                         MiddleName = item.MiddleName,
                         LastName = item.LastName,
-                        Amount = Convert.ToInt32(item.ArticleNo22payment).ToString()
+                        Amount = Convert.ToInt32(item.ArticleNo22payment).ToString(),
+                        MobileNo = item.MobileNo
                     };
 
                 challanDet = new Dictionary<string, string>();

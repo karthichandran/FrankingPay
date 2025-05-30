@@ -104,9 +104,7 @@ namespace FrankingPay.BL.Service
             {
                 throw ex;
             }
-        } 
-
-      
+        }
 
         private void UpdateFrankingFromModel(FrankingStore target, FrankingStoreModel source) {
 
@@ -123,6 +121,7 @@ namespace FrankingPay.BL.Service
             target.Article5Amount = source.ArticleNo5Amount;
             target.PanTan = source.PanTan;
             target.TransactionId = source.TransactionId;
+            target.MobileNo = source.MobileNo;
         }
 
         private PaymentProcessModel CreateModelFromFrankingDataModel(FrankingStore source) {
@@ -147,7 +146,8 @@ namespace FrankingPay.BL.Service
                 PanTan=source.PanTan,
                 TransactionId = source.TransactionId,
                 Article5Filename = source.Article5Filename,
-                Article22Filename = source.Article22Filename
+                Article22Filename = source.Article22Filename,
+                MobileNo = source.MobileNo
             };
             return item;
         }

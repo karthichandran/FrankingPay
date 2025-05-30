@@ -33,6 +33,7 @@ namespace FrankingPay.BL.Model
         private string _transactionId;
         private string _article5Filename;
         private string _article22Filename;
+        private string _mobileNo;
 
         public int FrankingId { get { return _frankingId; } set { _frankingId = value; OnPropertyChanged("FrankingId"); } }
         public string CompanyName { get { return _companyName; } set { _companyName = value; OnPropertyChanged("CompanyName"); } }
@@ -57,6 +58,7 @@ namespace FrankingPay.BL.Model
 
         public string Article5Filename { get { return _article5Filename; } set { _article5Filename = value; OnPropertyChanged("Article5Filename"); } }
         public string Article22Filename { get { return _article22Filename; } set { _article22Filename = value; OnPropertyChanged("Article22Filename"); } }
+        public string MobileNo { get { return _mobileNo; } set { _mobileNo = value; OnPropertyChanged("MobileNo"); } }
 
 
         #region INotifyPropertyChanged Members  

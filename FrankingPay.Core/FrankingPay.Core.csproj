@@ -10,7 +10,7 @@
     <PackageReference Include="PresentationFramework" Version="4.6.0" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="129.0.6668.8900" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="135.0.7049.9500" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <PackageReference Include="System.Text.Json" Version="7.0.3" />
   </ItemGroup>

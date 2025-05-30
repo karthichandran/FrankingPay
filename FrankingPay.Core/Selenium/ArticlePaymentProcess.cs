@@ -369,17 +369,17 @@ namespace FrankingPay.Core.Selenium
 
         public static Dictionary<string, string> ProcessArticle(ArticleFeedModel model, bool isArticle5E, string downloadPath, string fileName,string transactionId)
         {
-            _bankLogin = new BankAccountDetailsDto
-            {
-                UserName = "VidyaBIZ1Ganesh",
-                UserPassword = "Bizservices1@123"
-            };
-
             //_bankLogin = new BankAccountDetailsDto
             //{
-            //    UserName = "VidyaBIZ2Ganesh",
-            //    UserPassword = "Bizservices2@123"
+            //    UserName = "VidyaBIZ1Ganesh",
+            //    UserPassword = "Bizservices1@123"
             //};
+
+            _bankLogin = new BankAccountDetailsDto
+            {
+                UserName = "VidyaBIZ2Ganesh",
+                UserPassword = "Bizservices@987"
+            };
 
             //_bankLogin = new BankAccountDetailsDto
             //{
@@ -504,6 +504,9 @@ namespace FrankingPay.Core.Selenium
 
                 var addressElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:address"));
                 addressElm.SendKeys(model.Address);
+
+                var mobileElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:phnNo"));
+                mobileElm.SendKeys(model.MobileNo); 
 
                 var categoryElm = webDriver.FindElement(By.Id("viewns_Z7_48CC1OC0O0VID0QCG60F962085_:challanForm:category"));
                 var categoryDDl = new SelectElement(categoryElm);
@@ -878,41 +881,41 @@ namespace FrankingPay.Core.Selenium
         {
             Dictionary<string, string> grid = new Dictionary<string, string>();
             //VidyaBIZ2Ganesh
-            //grid.Add("A", "92");
-            //grid.Add("B", "63");
-            //grid.Add("C", "25");
-            //grid.Add("D", "45");
-            //grid.Add("E", "82");
-            //grid.Add("F", "55");
-            //grid.Add("G", "62");
-            //grid.Add("H", "47");
-            //grid.Add("I", "51");
-            //grid.Add("J", "58");
-            //grid.Add("K", "79");
-            //grid.Add("L", "45");
-            //grid.Add("M", "22");
-            //grid.Add("N", "44");
-            //grid.Add("O", "49");
-            //grid.Add("P", "73");
+            grid.Add("A", "92");
+            grid.Add("B", "63");
+            grid.Add("C", "25");
+            grid.Add("D", "45");
+            grid.Add("E", "82");
+            grid.Add("F", "55");
+            grid.Add("G", "62");
+            grid.Add("H", "47");
+            grid.Add("I", "51");
+            grid.Add("J", "58");
+            grid.Add("K", "79");
+            grid.Add("L", "45");
+            grid.Add("M", "22");
+            grid.Add("N", "44");
+            grid.Add("O", "49");
+            grid.Add("P", "73");
 
             //VidyaBIZ1Ganesh
             //582266194.RGANESH
-            grid.Add("A", "57");
-            grid.Add("B", "12");
-            grid.Add("C", "22");
-            grid.Add("D", "67");
-            grid.Add("E", "33");
-            grid.Add("F", "10");
-            grid.Add("G", "49");
-            grid.Add("H", "43");
-            grid.Add("I", "20");
-            grid.Add("J", "31");
-            grid.Add("K", "89");
-            grid.Add("L", "28");
-            grid.Add("M", "42");
-            grid.Add("N", "05");
-            grid.Add("O", "88");
-            grid.Add("P", "04");
+            //grid.Add("A", "57");
+            //grid.Add("B", "12");
+            //grid.Add("C", "22");
+            //grid.Add("D", "67");
+            //grid.Add("E", "33");
+            //grid.Add("F", "10");
+            //grid.Add("G", "49");
+            //grid.Add("H", "43");
+            //grid.Add("I", "20");
+            //grid.Add("J", "31");
+            //grid.Add("K", "89");
+            //grid.Add("L", "28");
+            //grid.Add("M", "42");
+            //grid.Add("N", "05");
+            //grid.Add("O", "88");
+            //grid.Add("P", "04");
 
             ////579091011.RGANESH
             //grid.Add("A", "20");

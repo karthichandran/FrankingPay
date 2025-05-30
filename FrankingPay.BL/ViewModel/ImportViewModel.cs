@@ -105,16 +105,17 @@ namespace FrankingPay.BL.ViewModel
                         TransactionId = row[1].ToString(),
                         CompanyName = row[2].ToString(),
                         ProjectName = row[3].ToString(),
+                        UnitNo = Convert.ToInt32(row[4].ToString()),
                         FirstName = firstName,
                         MiddleName = middleName,
                         LastName =lastName,
-                        UnitNo = Convert.ToInt32(row[4].ToString()),
                         LotNo = Convert.ToInt32(row[5].ToString()),
                         InvoiceDocNo = Convert.ToInt64(row[6].ToString()),
-                        SaleValue = Convert.ToDecimal(row[8].ToString()),
-                        ArticleNo5Amount= Convert.ToDecimal(row[9].ToString()),
-                        ArticleNo22Amount = Convert.ToDecimal(row[10].ToString()),
-                        PanTan = row[11].ToString()
+                        MobileNo = row[8].ToString(),
+                        SaleValue = Convert.ToDecimal(row[9].ToString()),
+                        ArticleNo5Amount= Convert.ToDecimal(row[10].ToString()),
+                        ArticleNo22Amount = Convert.ToDecimal(row[11].ToString()),
+                        PanTan = row[12].ToString()
                     }) ;
                     inx++;
                 }

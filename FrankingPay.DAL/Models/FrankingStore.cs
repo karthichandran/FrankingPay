@@ -28,5 +28,6 @@ namespace FrankingPay.DAL.Models
         public string TransactionId { get; set; }
         public string Article5Filename { get; set; }
         public string Article22Filename { get; set; }
+        public string MobileNo { get; set; }
     }
 }
